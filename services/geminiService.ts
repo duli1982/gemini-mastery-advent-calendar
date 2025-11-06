@@ -5,12 +5,21 @@ import { GoogleGenAI } from "@google/genai";
 if (!process.env.API_KEY) {
   // In a real app, you might want to handle this more gracefully.
   // For this project, we assume it's set.
-  console.warn("API_KEY environment variable not set. Using a placeholder.");
+  console.warn("API_KEY environment variable not set. Using static content mode.");
 }
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || 'MISSING_API_KEY' });
 
 export const getDailySurprise = async (prompt: string, day: number): Promise<string> => {
+  // Static content mode: Return the prompt directly for all days
+  // This allows you to add custom messages for each day in constants.ts
+  // without needing the Gemini API key
+  return Promise.resolve(prompt);
+
+  // NOTE: If you want to enable AI-generated content in the future,
+  // uncomment the code below and add your GEMINI_API_KEY to the .env file
+
+  /*
   // For Day 1, the surprise is the prompt itself.
   if (day === 1) {
     return Promise.resolve(prompt);
@@ -35,4 +44,5 @@ export const getDailySurprise = async (prompt: string, day: number): Promise<str
     console.error("Error fetching from Gemini API:", error);
     throw new Error("Failed to fetch surprise from Gemini API.");
   }
+  */
 };
