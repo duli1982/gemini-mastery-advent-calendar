@@ -1,0 +1,28 @@
+import type { CalendarDay } from './types';
+
+export const CALENDAR_DAYS: CalendarDay[] = [
+  { day: 1, prompt: "# Elf Mode JD\n**Goal:** Fast job brief for busy HMs.\n## Prompt:\nAct as a recruiting elf. Summarize this Job Description into 5 bullet lines:\n Must-have skills\n Nice-to-have\n Top 3 outcomes in 6 months\n Interview focus\n 1-sentence pitch\nKeep it practical.\n**[PASTE JD]**" },
+  { day: 2, prompt: "In one paragraph, explain what the Gemini API is to someone non-technical." },
+  { day: 3, prompt: "What is the 'temperature' parameter in Gemini's configuration? Explain with an analogy." },
+  { day: 4, prompt: "Write a Gemini prompt to generate 3 creative names for a new internal AI assistant." },
+  { day: 5, prompt: "Explain the difference between a `text` part and an `inlineData` part when sending a multimodal prompt to Gemini." },
+  { day: 6, prompt: "Generate a JSON schema using Gemini's `responseSchema` for a simple user profile with 'name' (string) and 'age' (integer)." },
+  { day: 7, prompt: "What is a 'system instruction' and why is it useful? Provide a simple example." },
+  { day: 8, prompt: "Write a prompt to ask Gemini to act as a rubber duck debugger for a simple JavaScript function that has a bug." },
+  { day: 9, prompt: "Ask Gemini to generate a short, cheerful Christmas-themed story about a helpful robot." },
+  { day: 10, prompt: "How can you use Gemini for image generation? Provide a sample prompt for 'a cartoon snowman coding on a laptop'." },
+  { day: 11, prompt: "What is function calling in the Gemini API? Describe a use case where it would be powerful." },
+  { day: 12, prompt: "Generate a prompt that asks Gemini to summarize a long article about AI ethics into three bullet points." },
+  { day: 13, prompt: "Ask Gemini to create a list of 5 tips for writing effective prompts." },
+  { day: 14, prompt: "What is 'grounding' with Google Search? Explain how it helps keep Gemini's responses up-to-date." },
+  { day: 15, prompt: "Write a Gemini prompt to translate 'Happy Holidays and a wonderful New Year!' into German, French, and Spanish." },
+  { day: 16, prompt: "How does streaming with `generateContentStream` improve user experience?" },
+  { day: 17, prompt: "Ask Gemini to explain the 'topK' and 'topP' parameters in simple terms." },
+  { day: 18, prompt: "Generate a prompt to create a simple weekly meal plan in a markdown table format." },
+  { day: 19, prompt: "What is a potential challenge when using multimodal (text and image) inputs with Gemini?" },
+  { day: 20, prompt: "Ask Gemini to write a 4-line poem about the collaboration between humans and AI." },
+  { day: 21, prompt: "How would you use the Gemini Chat API (`ai.chats.create`) to build a conversational assistant?" },
+  { day: 22, prompt: "Generate a prompt asking Gemini to create a simple 'what to do' list for someone learning a new programming language." },
+  { day: 23, prompt: "Ask Gemini to create a 'system instruction' for an AI that is an expert in writing clear and concise emails." },
+  { day: 24, prompt: "Generate a festive and optimistic message about the future of AI for a team of developers. Make it inspiring." },
+];
