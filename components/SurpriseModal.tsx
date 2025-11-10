@@ -43,20 +43,35 @@ export const SurpriseModal: React.FC<SurpriseModalProps> = ({ isOpen, onClose, d
 
   const handleShare = (platform: 'x' | 'linkedin' | 'facebook') => {
     const url = window.location.href;
-    const text = `Check out Day ${dayData.day} of the Gemini Mastery Advent Calendar!`;
+    const text = `Check out Day ${dayData.day}: ${dayData.name} ${dayData.emoji} of the Gemini Mastery Advent Calendar!\n\n${dayData.whatItDoes}`;
     let shareUrl = '';
+
     switch (platform) {
       case 'x':
         shareUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+        window.open(shareUrl, '_blank', 'width=600,height=400');
         break;
       case 'linkedin':
-        shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
-        break;
       case 'facebook':
-        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+        // LinkedIn and Facebook don't support pre-filling text via URL
+        // Copy message to clipboard and notify user
+        navigator.clipboard.writeText(text).then(() => {
+          const platformName = platform === 'linkedin' ? 'LinkedIn' : 'Facebook';
+          shareUrl = platform === 'linkedin'
+            ? `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`
+            : `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+          window.open(shareUrl, '_blank', 'width=600,height=400');
+          alert(`✓ Message copied to clipboard!\n\nPaste it into your ${platformName} post (Ctrl+V or Cmd+V)`);
+        }).catch(err => {
+          console.error('Failed to copy:', err);
+          // Fallback: just open the share dialog
+          shareUrl = platform === 'linkedin'
+            ? `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`
+            : `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+          window.open(shareUrl, '_blank', 'width=600,height=400');
+        });
         break;
     }
-    window.open(shareUrl, '_blank', 'width=600,height=400');
   };
 
   if (!isOpen) {
