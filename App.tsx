@@ -113,7 +113,7 @@ const App: React.FC = () => {
        <div className="text-center mb-4 z-10">
         <h1 className="font-christmas text-5xl md:text-7xl text-yellow-300 drop-shadow-[0_3px_3px_rgba(0,0,0,0.7)]">Gemini Mastery</h1>
         <h2 className="font-christmas text-4xl md:text-6xl text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.5)]">Advent Calendar</h2>
-        <p className="text-gray-300 mt-2 text-lg">A daily dose of Gemini wisdom for Randstad GBS</p>
+        <p className="text-gray-300 mt-2 text-lg">A daily dose of Gemini wisdom</p>
       </div>
 
       {/* Countdown Timer */}
@@ -131,14 +131,14 @@ const App: React.FC = () => {
         <SurpriseModal
           isOpen={isModalOpen}
           onClose={handleCloseModal}
-          day={selectedDay.day}
+          dayData={selectedDay}
           content={modalContent}
           isLoading={isLoading}
         />
       )}
 
       <footer className="text-center text-gray-400 text-sm py-4 z-10">
-        <p>&copy; {new Date().getFullYear()} Randstad GBS. Happy Holidays!</p>
+        <p>&copy; {new Date().getFullYear()} Happy Holidays!</p>
       </footer>
     </div>
   );
