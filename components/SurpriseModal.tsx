@@ -197,7 +197,7 @@ export const SurpriseModal: React.FC<SurpriseModalProps> = ({ isOpen, onClose, d
           to { transform: scale(1); opacity: 1; }
         }
         .animate-scale-in { animation: scaleIn 0.3s ease-out forwards; }
-        
+
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }

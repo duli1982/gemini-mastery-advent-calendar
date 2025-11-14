@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { getTimeUntilNextUnlock } from '../utils/dateUtils';
+import React, { useState, useEffect, useMemo } from 'react';
+import { getTimeUntilNextUnlock, getDayUnlockTime } from '../utils/dateUtils';
 
 export const CountdownTimer: React.FC = () => {
   const [timeRemaining, setTimeRemaining] = useState(getTimeUntilNextUnlock());
@@ -20,11 +20,28 @@ export const CountdownTimer: React.FC = () => {
 
   const { days, hours, minutes, seconds, nextDay } = timeRemaining;
 
+  // Compute the user's local time for the next unlock (local midnight)
+  const localUnlockLabel = useMemo(() => {
+    try {
+      const unlockTime = getDayUnlockTime(nextDay);
+      const dtf = new Intl.DateTimeFormat(undefined, {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: undefined,
+        hour12: false,
+        timeZoneName: 'short',
+      });
+      return dtf.format(unlockTime); // local timezone by default
+    } catch {
+      return '';
+    }
+  }, [nextDay]);
+
   return (
     <div className="bg-gradient-to-r from-green-800/50 to-red-800/50 backdrop-blur-md rounded-2xl p-4 md:p-6 border-2 border-yellow-500/40 shadow-xl max-w-md mx-auto mb-6">
       <div className="text-center">
         <h3 className="text-yellow-300 font-christmas text-xl md:text-2xl mb-3">
-          ⏰ Next Gift Unlocks In:
+          🎁 Next Gift Unlocks In:
         </h3>
 
         <div className="flex justify-center gap-2 md:gap-4 mb-2">
@@ -66,8 +83,9 @@ export const CountdownTimer: React.FC = () => {
         </div>
 
         <p className="text-sm md:text-base text-gray-200 mt-3">
-          🎁 Day <span className="font-bold text-yellow-300">{nextDay}</span> opens at{' '}
-          <span className="font-bold text-yellow-300">00:01 CET</span>
+          🎄 Day <span className="font-bold text-yellow-300">{nextDay}</span> opens at{' '}
+          <span className="font-bold text-yellow-300">{localUnlockLabel}</span>
+          <span className="text-gray-400"> (your local time, at midnight)</span>
         </p>
       </div>
     </div>

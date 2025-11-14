@@ -40,9 +40,6 @@ export const Ornament: React.FC<OrnamentProps> = ({ dayInfo, isFuture, isOpened,
     baseClasses += ' cursor-not-allowed opacity-60 grayscale';
   } else {
     baseClasses += ' cursor-pointer hover:scale-110';
-    if (isToday) {
-      baseClasses += ' animate-pulse-glow';
-    }
   }
 
   const boxStyle: React.CSSProperties = {};
@@ -53,8 +50,9 @@ export const Ornament: React.FC<OrnamentProps> = ({ dayInfo, isFuture, isOpened,
     boxStyle.left = position.left;
   }
 
-  if (isOpened) {
-    boxStyle.filter = 'drop-shadow(0 0 12px rgba(255, 215, 0, 0.8)) drop-shadow(0 0 20px rgba(255, 215, 0, 0.5))';
+  // Visual emphasis: available (unopened) gets a subtle gold glow; opened has no glow
+  if (!isFuture && !isOpened) {
+    boxStyle.filter = 'drop-shadow(0 0 10px rgba(255, 215, 0, 0.5)) drop-shadow(0 0 18px rgba(255, 215, 0, 0.35))';
   }
 
   const handleClick = (event: React.MouseEvent) => {
@@ -156,8 +154,8 @@ export const Ornament: React.FC<OrnamentProps> = ({ dayInfo, isFuture, isOpened,
             </span>
           </div>
 
-          {/* Sparkles for opened gifts */}
-          {isOpened && !isFuture && (
+          {/* Sparkles removed for opened gifts */}
+          {false && isOpened && !isFuture && (
             <>
               <div className="sparkle" style={{ top: '-2px', left: '-2px' }}>✨</div>
               <div className="sparkle" style={{ top: '-2px', right: '-2px', animationDelay: '0.3s' }}>✨</div>
@@ -190,20 +188,7 @@ export const Ornament: React.FC<OrnamentProps> = ({ dayInfo, isFuture, isOpened,
           }
         }
 
-        @keyframes pulse-glow {
-          0%, 100% {
-            transform: translate(-50%, -50%) scale(1);
-            filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.5));
-          }
-          50% {
-            transform: translate(-50%, -50%) scale(1.08);
-            filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.9));
-          }
-        }
-
-        .animate-pulse-glow {
-          animation: pulse-glow 2s infinite;
-        }
+        /* Removed pulse-glow animation */
 
         /* Unwrap Animations */
         @keyframes unwrap-shake {

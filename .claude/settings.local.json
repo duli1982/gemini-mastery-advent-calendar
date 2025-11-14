@@ -6,7 +6,20 @@
       "Bash(npm run build:*)",
       "Bash(gh:*)",
       "Bash(git init:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nInitial commit: Gemini Mastery Advent Calendar\n\n- 24-day interactive advent calendar with festive animations\n- CET timezone-based unlocking (00:01 for days 2-24)\n- Google Gemini API integration for daily content\n- Gift unwrapping animations with ribbons and bow effects\n- Particle burst effects and snowfall animations\n- Responsive grid layout with countdown timer\n- LocalStorage progress tracking\n- Comprehensive README with Vercel deployment guide\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git branch:*)",
+      "Bash(git remote add:*)",
+      "Bash(git push:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nSwitch to static content mode for all 24 days\n\n- Modified getDailySurprise to return prompts directly for all days\n- No GEMINI_API_KEY required - all content now comes from constants.ts\n- API code preserved in comments for future AI-powered content option\n- Allows easy addition of 24 custom messages without external dependencies\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git pull:*)",
+      "Bash(git stash:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nFix Vercel deployment configuration\n\n- Replace legacy ''routes'' with modern ''rewrites''\n- Remove GEMINI_API_KEY environment variables (no longer needed)\n- Fix conflict between routes and headers in vercel.json\n- Resolves Vercel deployment error\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(npm install:*)",
+      "Bash(git checkout:*)",
+      "Bash(git commit:*)",
+      "Bash(git diff:*)",
+      "Bash(git rebase:*)"
     ],
     "deny": [],
     "ask": []

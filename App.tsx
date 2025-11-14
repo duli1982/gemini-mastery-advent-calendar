@@ -7,7 +7,8 @@ import { getDailySurprise } from './services/geminiService';
 import { CALENDAR_DAYS } from './constants';
 import type { CalendarDay } from './types';
 import { Confetti } from './components/Confetti';
-import { getCurrentCETDate } from './utils/dateUtils';
+import { getCurrentCETDate, getCurrentDecemberDay, isOpenAllEnabled } from './utils/dateUtils';
+import { analytics } from './utils/analytics';
 
 const Snowfall: React.FC = () => {
   const snowFlakes = useMemo(() => {
@@ -27,7 +28,7 @@ const Snowfall: React.FC = () => {
 };
 
 const App: React.FC = () => {
-  // Use real CET date instead of demo date
+  // Use real local date instead of demo date
   const [currentDate, setCurrentDate] = useState(getCurrentCETDate());
   const [openedDays, setOpenedDays] = useState<Set<number>>(() => {
     try {
@@ -51,16 +52,20 @@ const App: React.FC = () => {
     localStorage.setItem('geminiAdventOpenedDays', JSON.stringify(Array.from(openedDays)));
   }, [openedDays]);
 
-  // Update current date every minute to check for new unlocks
+  // Update current date every second to keep unlocks and status perfectly in sync
   useEffect(() => {
+    analytics.init().then(() => {
+      analytics.trackOverrideActive(isOpenAllEnabled());
+    }).catch(() => void 0);
     const interval = setInterval(() => {
       setCurrentDate(getCurrentCETDate());
-    }, 60000); // Update every minute
+    }, 1000); // Update every second
 
     return () => clearInterval(interval);
   }, []);
 
   const handleDayClick = useCallback(async (day: CalendarDay, event?: React.MouseEvent) => {
+    analytics.trackDoorClick(day.day);
     // Trigger particle burst at click location
     if (event) {
       setParticleBurst({ x: event.clientX, y: event.clientY });
@@ -84,6 +89,7 @@ const App: React.FC = () => {
     try {
       const content = await getDailySurprise(day.prompt, day.day);
       setModalContent(content);
+      analytics.trackDoorOpen(day.day);
     } catch (error) {
       console.error('Error fetching surprise:', error);
       setModalContent('There was a problem fetching your surprise. Please try again later.');
@@ -98,6 +104,13 @@ const App: React.FC = () => {
     setModalContent('');
   };
 
+  const decemberDay = getCurrentDecemberDay();
+  const seasonStatus: 'pre' | 'during' | 'post' = decemberDay === 0
+    ? 'pre'
+    : decemberDay >= 25
+      ? 'post'
+      : 'during';
+
   return (
     <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center p-4 overflow-hidden" style={{background: 'linear-gradient(to bottom, #0c1427, #1a202c, #2a314b)'}}>
        {showConfetti && <Confetti />}
@@ -110,10 +123,32 @@ const App: React.FC = () => {
        )}
        <Snowfall />
 
-       <div className="text-center mb-4 z-10">
+      <div className="text-center mb-4 z-10">
         <h1 className="font-christmas text-5xl md:text-7xl text-yellow-300 drop-shadow-[0_3px_3px_rgba(0,0,0,0.7)]">Gemini Mastery</h1>
         <h2 className="font-christmas text-4xl md:text-6xl text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.5)]">Advent Calendar</h2>
         <p className="text-gray-300 mt-2 text-lg">A daily dose of Gemini wisdom</p>
+
+        <div className="mt-3 text-sm md:text-base text-gray-200 max-w-2xl mx-auto">
+          <p>
+            Open a new gift every day from <span className="font-semibold">December 1–24</span>. Each door unlocks at
+            <span className="font-semibold"> midnight</span>, and you can revisit any opened day at any time.
+          </p>
+          {seasonStatus === 'pre' && (
+            <p className="mt-1 text-gray-300">
+              Doors are still locked for now. Check back on December 1 for your first surprise.
+            </p>
+          )}
+          {seasonStatus === 'during' && (
+            <p className="mt-1 text-gray-300">
+              Presents with a warm glow are ready to open. Come back each day for the next gift.
+            </p>
+          )}
+          {seasonStatus === 'post' && (
+            <p className="mt-1 text-yellow-300 font-semibold">
+              All 24 gifts are now unlocked — Happy Holidays! Explore any day again and download your Gemini Mastery PDF.
+            </p>
+          )}
+        </div>
       </div>
 
       {/* Countdown Timer */}

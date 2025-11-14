@@ -58,10 +58,10 @@ export const AdventGrid: React.FC<AdventGridProps> = ({
           <span className="inline-block w-4 h-4 bg-gray-500 rounded"></span>
           <span>Locked</span>
           <span className="mx-2">•</span>
-          <span className="inline-block w-4 h-4 bg-gradient-to-br from-red-500 to-red-700 rounded"></span>
+          <span className="inline-block w-4 h-4 bg-gradient-to-br from-red-500 to-red-700 rounded shadow-[0_0_15px_rgba(255,215,0,0.8)]"></span>
           <span>Available</span>
           <span className="mx-2">•</span>
-          <span className="inline-block w-4 h-4 bg-gradient-to-br from-red-500 to-red-700 rounded shadow-[0_0_15px_rgba(255,215,0,0.8)]"></span>
+          <span className="inline-block w-4 h-4 bg-gradient-to-br from-red-500 to-red-700 rounded"></span>
           <span>Opened</span>
         </p>
       </div>
