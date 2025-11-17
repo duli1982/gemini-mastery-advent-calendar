@@ -1,0 +1,5 @@
+{
+  "name": "Gemini Mastery Advent Calendar",
+  "description": "An advent calendar o master the Gemini API. A new window on the Christmas tree unlocks each day from December 1st to 24th, revealing a daily prompt, tip, or challenge related to Gemini.",
+  "requestFramePermissions": []
+}
