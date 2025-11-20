@@ -3,6 +3,7 @@ import { AdventGrid } from './components/AdventGrid';
 import { SurpriseModal } from './components/SurpriseModal';
 import { CountdownTimer } from './components/CountdownTimer';
 import { ParticleBurst } from './components/ParticleBurst';
+import { CookieConsent } from './components/CookieConsent';
 import { getDailySurprise } from './services/geminiService';
 import { CALENDAR_DAYS } from './constants';
 import type { CalendarDay } from './types';
@@ -47,16 +48,23 @@ const App: React.FC = () => {
   const [showConfetti, setShowConfetti] = useState<boolean>(false);
   const [ornamentShape, setOrnamentShape] = useState<'bulb' | 'circle'>('bulb');
   const [particleBurst, setParticleBurst] = useState<{ x: number; y: number } | null>(null);
+  const [analyticsEnabled, setAnalyticsEnabled] = useState<boolean>(false);
 
   useEffect(() => {
     localStorage.setItem('geminiAdventOpenedDays', JSON.stringify(Array.from(openedDays)));
   }, [openedDays]);
 
+  // Initialize analytics only after user consent
+  useEffect(() => {
+    if (analyticsEnabled) {
+      analytics.init().then(() => {
+        analytics.trackOverrideActive(isOpenAllEnabled());
+      }).catch(() => void 0);
+    }
+  }, [analyticsEnabled]);
+
   // Update current date every second to keep unlocks and status perfectly in sync
   useEffect(() => {
-    analytics.init().then(() => {
-      analytics.trackOverrideActive(isOpenAllEnabled());
-    }).catch(() => void 0);
     const interval = setInterval(() => {
       setCurrentDate(getCurrentCETDate());
     }, 1000); // Update every second
@@ -176,6 +184,12 @@ const App: React.FC = () => {
       <footer className="text-center text-gray-400 text-sm py-4 z-10">
         <p>&copy; {new Date().getFullYear()} Happy Holidays!</p>
       </footer>
+
+      {/* GDPR Cookie Consent Banner */}
+      <CookieConsent
+        onAccept={() => setAnalyticsEnabled(true)}
+        onDecline={() => setAnalyticsEnabled(false)}
+      />
     </div>
   );
 };

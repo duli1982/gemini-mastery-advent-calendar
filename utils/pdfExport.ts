@@ -1,9 +1,11 @@
-import jsPDF from 'jspdf';
 import { CALENDAR_DAYS } from '../constants';
 import { analytics } from './analytics';
 
-export const exportAllPromptsAsPDF = () => {
+export const exportAllPromptsAsPDF = async () => {
   analytics.trackPdfExport();
+
+  // Lazy load jsPDF only when user clicks export (saves ~200KB from initial bundle)
+  const { default: jsPDF } = await import('jspdf');
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
