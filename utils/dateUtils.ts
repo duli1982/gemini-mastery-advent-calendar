@@ -1,13 +1,13 @@
 /**
  * Utility functions for handling dates
- * All logic is now based on the user's local timezone.
+ * All logic is based on the user's local timezone.
+ * Days unlock at midnight (00:00:01) in each user's local time.
  */
 
 /**
  * Get current date and time in the user's local timezone
- * (kept name for backwards compatibility)
  */
-export const getCurrentCETDate = (): Date => {
+export const getCurrentLocalDate = (): Date => {
   return new Date();
 };
 
@@ -69,7 +69,7 @@ export const isDayUnlocked = (day: number): boolean => {
     return true;
   }
 
-  const now = getCurrentCETDate();
+  const now = getCurrentLocalDate();
   const currentYear = now.getFullYear();
   const currentMonth = now.getMonth(); // 0-based, December = 11
 
@@ -110,7 +110,7 @@ export const isDayUnlocked = (day: number): boolean => {
  * @returns Date object representing when the day unlocks
  */
 export const getDayUnlockTime = (day: number, year?: number): Date => {
-  const now = getCurrentCETDate();
+  const now = getCurrentLocalDate();
   const unlockYear = year || now.getFullYear();
 
   // Months are 0-based, December = 11
@@ -185,15 +185,15 @@ export const getTimeUntilNextUnlock = (): {
 };
 
 /**
- * Get current day in December (CET timezone)
+ * Get current day in December (local timezone)
  * Returns 0 if not December
  */
 export const getCurrentDecemberDay = (): number => {
-  const currentCET = getCurrentCETDate();
+  const currentLocal = getCurrentLocalDate();
 
-  if (currentCET.getMonth() !== 11) {
+  if (currentLocal.getMonth() !== 11) {
     return 0; // Not December
   }
 
-  return currentCET.getDate();
+  return currentLocal.getDate();
 };

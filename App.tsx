@@ -8,7 +8,7 @@ import { getDailySurprise } from './services/geminiService';
 import { CALENDAR_DAYS } from './constants';
 import type { CalendarDay } from './types';
 import { Confetti } from './components/Confetti';
-import { getCurrentCETDate, getCurrentDecemberDay, isOpenAllEnabled } from './utils/dateUtils';
+import { getCurrentLocalDate, getCurrentDecemberDay, isOpenAllEnabled } from './utils/dateUtils';
 import { analytics } from './utils/analytics';
 
 const Snowfall: React.FC = () => {
@@ -30,7 +30,7 @@ const Snowfall: React.FC = () => {
 
 const App: React.FC = () => {
   // Use real local date instead of demo date
-  const [currentDate, setCurrentDate] = useState(getCurrentCETDate());
+  const [currentDate, setCurrentDate] = useState(getCurrentLocalDate());
   const [openedDays, setOpenedDays] = useState<Set<number>>(() => {
     try {
       const saved = localStorage.getItem('geminiAdventOpenedDays');
@@ -66,7 +66,7 @@ const App: React.FC = () => {
   // Update current date every second to keep unlocks and status perfectly in sync
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentDate(getCurrentCETDate());
+      setCurrentDate(getCurrentLocalDate());
     }, 1000); // Update every second
 
     return () => clearInterval(interval);
