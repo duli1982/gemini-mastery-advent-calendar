@@ -65,4 +65,9 @@ export const analytics = {
   trackPdfExport: () => analytics.track('pdf_export'),
   trackCountdownVisible: (nextDay: number) => analytics.track('countdown_visible', { nextDay }),
   trackApiError: (source: string, message: string) => analytics.track('api_error', { source, message }),
+
+  // New metrics
+  trackCopyPrompt: (day: number) => analytics.track('copy_prompt', { day }),
+  trackAllDaysOpened: () => analytics.track('all_days_opened'),
+  trackModalDuration: (day: number, seconds: number) => analytics.track('modal_duration', { day, seconds }),
 };

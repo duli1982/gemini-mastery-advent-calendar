@@ -36,6 +36,19 @@ export const SurpriseModal: React.FC<SurpriseModalProps> = ({ isOpen, onClose, d
     }
   }, [content, isLoading]);
 
+  // Track modal duration
+  useEffect(() => {
+    if (isOpen && !isLoading) {
+      const startTime = Date.now();
+      return () => {
+        const durationSeconds = Math.round((Date.now() - startTime) / 1000);
+        if (durationSeconds > 0) {
+          analytics.trackModalDuration(dayData.day, durationSeconds);
+        }
+      };
+    }
+  }, [isOpen, isLoading, dayData.day]);
+
   // PDF export cooldown timer
   useEffect(() => {
     if (pdfCooldownSeconds > 0) {
@@ -49,6 +62,7 @@ export const SurpriseModal: React.FC<SurpriseModalProps> = ({ isOpen, onClose, d
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(dayData.prompt);
+      analytics.trackCopyPrompt(dayData.day);
       setCopySuccess(true);
       setTimeout(() => setCopySuccess(false), 2000);
     } catch (err) {

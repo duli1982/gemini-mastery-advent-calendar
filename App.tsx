@@ -52,6 +52,9 @@ const App: React.FC = () => {
 
   useEffect(() => {
     localStorage.setItem('geminiAdventOpenedDays', JSON.stringify(Array.from(openedDays)));
+    if (openedDays.size === 24) {
+      analytics.trackAllDaysOpened();
+    }
   }, [openedDays]);
 
   // Initialize analytics only after user consent
@@ -93,7 +96,7 @@ const App: React.FC = () => {
     if (!openedDays.has(day.day)) {
       setOpenedDays(prev => new Set(prev).add(day.day));
     }
-    
+
     try {
       const content = await getDailySurprise(day.prompt, day.day);
       setModalContent(content);
@@ -121,16 +124,16 @@ const App: React.FC = () => {
       : 'during';
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center p-4" style={{background: 'linear-gradient(to bottom, #0c1427, #1a202c, #2a314b)'}}>
-       {showConfetti && <Confetti />}
-       {particleBurst && (
-         <ParticleBurst
-           x={particleBurst.x}
-           y={particleBurst.y}
-           onComplete={() => setParticleBurst(null)}
-         />
-       )}
-       <Snowfall />
+    <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center p-4" style={{ background: 'linear-gradient(to bottom, #0c1427, #1a202c, #2a314b)' }}>
+      {showConfetti && <Confetti />}
+      {particleBurst && (
+        <ParticleBurst
+          x={particleBurst.x}
+          y={particleBurst.y}
+          onComplete={() => setParticleBurst(null)}
+        />
+      )}
+      <Snowfall />
 
       <div className="text-center mb-4 z-10">
         <h1 className="font-christmas text-5xl md:text-7xl text-yellow-300 drop-shadow-[0_3px_3px_rgba(0,0,0,0.7)]">Gemini Mastery</h1>
@@ -170,7 +173,7 @@ const App: React.FC = () => {
         onDayClick={handleDayClick}
         shape={ornamentShape}
       />
-      
+
       {selectedDay && (
         <SurpriseModal
           isOpen={isModalOpen}
