@@ -140,9 +140,9 @@ export const getTimeUntilNextUnlock = (): {
   const currentMonth = now.getMonth(); // 0-based, December = 11
   const currentDay = now.getDate();
 
-  // If not December yet, return time until December 1
+  // If not December yet, return time until December 1 (00:00:01 local)
   if (currentMonth < 11) {
-    const dec1 = new Date(currentYear, 11, 1, 0, 0, 0);
+    const dec1 = getDayUnlockTime(1, currentYear);
     const diff = dec1.getTime() - now.getTime();
 
     return {
@@ -155,10 +155,21 @@ export const getTimeUntilNextUnlock = (): {
     };
   }
 
-  // If December, find next unlock day
-  let nextDay = currentDay + 1;
+  // In December, first check if today's unlock hasn't happened yet (covers 00:00:00 → 00:00:01 gap)
+  const todayUnlock = getDayUnlockTime(currentDay, currentYear);
+  if (currentDay <= 24 && now < todayUnlock) {
+    const diff = todayUnlock.getTime() - now.getTime();
+    return {
+      days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+      hours: Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+      minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
+      seconds: Math.floor((diff % (1000 * 60)) / 1000),
+      totalMilliseconds: diff,
+      nextDay: currentDay
+    };
+  }
 
-  // If past December 24, no more unlocks
+  // If past December 24 (and day 24 already unlocked), no more unlocks
   if (currentDay >= 24) {
     return {
       days: 0,
@@ -170,7 +181,8 @@ export const getTimeUntilNextUnlock = (): {
     };
   }
 
-  // Calculate time until next day at 00:00:01 local time
+  // Otherwise countdown to the next day's unlock (00:00:01 local time)
+  const nextDay = currentDay + 1;
   const nextUnlock = getDayUnlockTime(nextDay, currentYear);
   const diff = nextUnlock.getTime() - now.getTime();
 
