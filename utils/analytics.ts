@@ -8,8 +8,9 @@ declare global {
   }
 }
 
-const env = (import.meta as any)?.env || {};
-const provider: Provider = (env.VITE_ANALYTICS_PROVIDER as Provider) || 'none';
+// Use a direct reference so Vite replaces env vars at build time
+const env = import.meta.env;
+const provider: Provider = (env?.VITE_ANALYTICS_PROVIDER as Provider) || 'none';
 
 const loadScript = (src: string, attrs: Record<string, string> = {}): Promise<void> => {
   return new Promise((resolve, reject) => {
