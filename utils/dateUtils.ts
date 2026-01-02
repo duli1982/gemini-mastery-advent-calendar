@@ -60,7 +60,7 @@ export const isOpenAllEnabled = (): boolean => {
     // ignore if import.meta.env is unavailable
   }
 
-  return false;
+  return true; // <-- UPDATED: All windows are now unlocked
 };
 
 export const isDayUnlocked = (day: number): boolean => {
@@ -202,6 +202,12 @@ export const getTimeUntilNextUnlock = (): {
  */
 export const getCurrentDecemberDay = (): number => {
   const currentLocal = getCurrentLocalDate();
+
+  // UPDATED: If we are in January, return 25 to signify the "Post-December" season
+  // This ensures the UI displays the "Happy Holidays" message.
+  if (currentLocal.getMonth() === 0) {
+    return 25;
+  }
 
   if (currentLocal.getMonth() !== 11) {
     return 0; // Not December
