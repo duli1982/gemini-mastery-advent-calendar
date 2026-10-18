@@ -1,24 +1,31 @@
 {
-  "name": "gemini-mastery-advent-calendar",
+  "name": "randstad-gbs-ai-at-work-2026",
+  "version": "1.0.0",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "dev": "vite --host 127.0.0.1 --port 3006",
+    "dev:review": "vite --mode review --host 127.0.0.1 --port 3006",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 3007",
+    "test": "tsx --test tests/core.test.ts",
+    "test:browser": "playwright test",
+    "workbooks": "tsx scripts/workbooks.ts"
   },
   "dependencies": {
-    "@types/dompurify": "^3.0.5",
-    "dompurify": "^3.3.0",
-    "jspdf": "^3.0.3",
-    "marked": "^14.0.0",
+    "jspdf": "^4.2.0",
+    "lucide-react": "^0.468.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
+    "@playwright/test": "^1.56.0",
     "@types/node": "^22.14.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
     "@vitejs/plugin-react": "^5.0.0",
+    "tsx": "^4.20.0",
     "typescript": "~5.8.2",
     "vite": "^6.2.0"
   }
