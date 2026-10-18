@@ -54,9 +54,25 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .present-tag { background:var(--enterprise-offwhite); color:var(--enterprise-navy); }
 .present-tag:before { background:var(--enterprise-turquoise); }
 .scene-note { background:var(--enterprise-offwhite); color:var(--enterprise-navy); border-color:var(--enterprise-offwhite); }
-.feature-strip { background:var(--enterprise-offwhite); border-color:var(--enterprise-offwhite); }
-.feature-strip span { color:var(--enterprise-navy); }
-.feature-strip svg { color:var(--enterprise-blue); }
+.feature-strip-wrap { padding-top:4px; padding-bottom:4px; }
+.feature-strip { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); padding:24px; background:var(--enterprise-offwhite); border:1px solid var(--enterprise-offwhite); border-radius:16px; box-shadow:0 12px 32px #050b251a; }
+.feature-strip span { min-width:0; min-height:42px; padding:0 20px; color:var(--enterprise-navy); font-size:12px; line-height:1.5; gap:12px; }
+.feature-strip span:first-child { padding-left:0; }
+.feature-strip span:last-child { padding-right:0; }
+.feature-strip span+span { border-left:1px solid #d1d7df; }
+.feature-strip svg { box-sizing:content-box; width:17px; height:17px; padding:10px; color:var(--enterprise-blue); background:#e5edf6; border-radius:10px; }
+@media(max-width:1000px) {
+  .hero { overflow-x:clip; }
+  .feature-strip { grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px 0; }
+  .feature-strip span { padding:0 20px; }
+  .feature-strip span:nth-child(odd) { padding-left:0; border-left:0; }
+}
+@media(max-width:540px) {
+  .feature-strip { padding:20px; gap:22px 18px; border-radius:14px; }
+  .feature-strip span { flex-direction:column; align-items:flex-start; padding:0; gap:9px; font-size:11px; }
+  .feature-strip span+span { border-left:0; }
+  .feature-strip svg { padding:8px; }
+}
 .journeys .section-heading .eyebrow,.how-section .eyebrow { color:var(--enterprise-turquoise); }
 .section-heading>p,.journey-note,.how-section p { color:#c4cedb; }
 .track-card { background:var(--enterprise-offwhite); color:var(--enterprise-navy); border-color:var(--enterprise-offwhite); }
