@@ -38,7 +38,11 @@ test('deep links, browser history, keyboard and focus return', async ({ page }) 
   await expect(page.getByRole('dialog').getByRole('heading', { name: 'Studio: Incoming Request to Brief', exact: true })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Close activity' })).toBeFocused();
   await page.keyboard.press('Shift+Tab');
+  await expect(page.getByRole('button', { name: 'Copy activity link' })).toBeFocused();
+  await page.keyboard.press('Shift+Tab');
   await expect(page.getByRole('button', { name: 'Mark as tried', exact: true })).toBeFocused();
+  await page.keyboard.press('Tab');
+  await expect(page.getByRole('button', { name: 'Copy activity link' })).toBeFocused();
   await page.keyboard.press('Tab');
   await expect(page.getByRole('button', { name: 'Close activity' })).toBeFocused();
   await page.keyboard.press('Escape');
@@ -90,11 +94,11 @@ test('production dates lock content and ignore openAll; all remain available in 
   await page.clock.install({ time: new Date('2026-11-30T22:59:59Z') });
   await page.goto('http://127.0.0.1:3007/?track=business&day=1&openAll=1');
   await expect(page.getByText('A little anticipation.')).toBeVisible();
-  await expect(page.getByRole('button', { name: /Copy prompt/ })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: /Copy (work )?prompt/ })).toHaveCount(0);
   await expect(page.locator('.review-banner')).toHaveCount(0);
   await page.clock.setSystemTime(new Date('2026-11-30T23:00:01Z'));
   await page.clock.runFor(1100);
-  await expect(page.getByRole('button', { name: /Copy prompt/ })).toBeVisible();
+  await expect(page.getByRole('button', { name: /Copy work prompt/ })).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(page.getByRole('button', { name: 'Available December 24' })).toBeDisabled();
   await page.clock.setSystemTime(new Date('2027-01-01T12:00:00Z'));

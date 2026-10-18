@@ -1,6 +1,7 @@
 import { jsPDF } from 'jspdf';
 import type { Track } from '../types';
 import { practices } from '../content/practice';
+import { departmentVariants } from '../content/work';
 
 type RGB = [number, number, number];
 const NAVY: RGB = [15, 25, 65];
@@ -32,6 +33,13 @@ export function createWorkbook(track: Track) {
     y += 2;
   }
   function heading(value: string) { ensure(20); y += 4; text(value, 11, NAVY, true); }
+  function paragraphSection(title: string, value: string, size = 9) {
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(size);
+    const count = (doc.splitTextToSize(ascii(value), contentWidth) as string[]).length;
+    // Keep a heading with its short paragraph; longer passages may paginate.
+    ensure(16 + Math.min(count, 9) * size * .48);
+    heading(title); text(value, size);
+  }
   function lines(values: string[], numbered = false) { values.forEach((value, index) => text(`${numbered ? `${index + 1}.` : '-'} ${value}`, 9.5)); }
   // Cover
   doc.setFillColor(...PAPER); doc.rect(0, 0, width, height, 'F');
@@ -60,15 +68,27 @@ export function createWorkbook(track: Track) {
     text(a.title, 24, NAVY);
     text(a.summary, 11);
     text(`For: ${a.departments.join(', ')}\nTools: ${a.tools.join(', ')} / ${a.minutes} minutes`, 9);
+    heading('Use it for my work');
+    text(`Use this when: ${a.work.when}`, 9.5);
+    text(`Have ready: ${a.work.inputs.join('; ')}`, 9.5);
+    text(`Open: ${a.work.app}\n${a.work.appUrl}`, 9);
+    text(`Application: ${a.work.quickMinutes} minutes / ${a.work.level}. ${a.work.output}`, 9);
+    lines(a.work.steps, true);
+    paragraphSection('Work prompt', a.work.prompt, 9.5);
+    paragraphSection('Reusable output template', a.work.template.replace(/\t/g, ' | '), 8.5);
+    heading('Work review checklist'); lines(a.work.checks);
+    text(`Related ${a.related.track === 'guided' ? 'Guided Learning' : 'Business Activities'} activity: Day ${a.related.day}. Full lessons follow the December dates.`, 9);
+    newPage(); heading('Practise with an example');
     heading('Before you begin'); text(a.prerequisites, 9.5);
     heading('Try it, step by step'); lines(a.steps, true);
     heading('Your starting prompt'); text(a.prompt, 9.5);
     heading('Practice materials - fictional training only');
     for (const id of a.practiceIds) {
-      const p = practices[id]; ensure(18); text(`${p.title} (${p.format.toUpperCase()})`, 10, NAVY, true);
-      text(p.text, p.format === 'csv' ? 8 : 9);
+      const p = practices[id];
+      paragraphSection(`${p.title} (${p.format.toUpperCase()})`, p.text, p.format === 'csv' ? 8 : 9);
     }
     heading('What good looks like'); lines(a.expected);
+    for (const id of a.practiceIds) if(practices[id].workedExample) paragraphSection(`Worked example: ${practices[id].title}`, practices[id].workedExample!, 9);
     heading('Check before you use it'); lines(a.checks);
     heading('Something to keep'); text(a.takeaway, 10, NAVY, true);
     text(`Go further: ${a.advanced}`, 9.5);
@@ -80,7 +100,24 @@ export function createWorkbook(track: Track) {
     for (const ref of a.references) { ensure(18); text(ref.title, 9, NAVY, true); text(ref.url, 8); }
     text(`Documentation checked ${a.verified}. Feature access varies. This exercise has not been run in your company tenant.`, 8);
     heading('My notes / What I will use again');
-    for (let i = 0; i < 4; i++) { ensure(9); doc.setDrawColor(...TURQUOISE); doc.line(margin, y + 4, width - margin, y + 4); y += 9; }
+    const writingLines = Math.min(12, Math.max(4, Math.floor((bottom-y-5)/9)));
+    for (let i = 0; i < writingLines; i++) { ensure(9); doc.setDrawColor(...TURQUOISE); doc.line(margin, y + 4, width - margin, y + 4); y += 9; }
+  }
+  const variantIds = [...new Set(track.activities.flatMap(a=>a.work.variantIds))];
+  currentLabel = `${track.name} / Department examples`;
+  newPage(); text('Department variations', 25, NAVY);
+  text('Optional fictional practice cases and reusable work templates. These examples are not company policy or real records. Use the work prompts with permitted sources in approved Google tools.', 10);
+  for(const id of variantIds) {
+    const v = departmentVariants[id];
+    heading(`${v.department}: ${v.title}`);
+    text(`Have ready: ${v.inputs.join('; ')}`, 9);
+    text(`Open: ${v.guide.app}\n${v.guide.appUrl}`, 9);
+    text(`You will get: ${v.guide.output}`, 9);
+    lines(v.guide.steps, true);
+    paragraphSection('Department work prompt', v.prompt);
+    paragraphSection('Fictional practice case', v.example);
+    paragraphSection('Output template', v.template.replace(/\t/g, ' | '), 8.5);
+    heading('Department checks'); lines(v.checks);
   }
   const count = doc.getNumberOfPages();
   for (let page = 1; page <= count; page++) {

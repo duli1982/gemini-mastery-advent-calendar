@@ -14,7 +14,7 @@ for track in ['guided', 'business']:
     texts = [page.extract_text() or '' for page in reader.pages]
     all_text = '\n'.join(texts)
     assert 'From 2025 to 2026' not in all_text
-    for section in ['Before you begin', 'Try it, step by step', 'Your starting prompt', 'Practice materials', 'What good looks like', 'Check before you use it', 'Something to keep', 'If a feature is unavailable', 'Official guidance', 'My notes']:
+    for section in ['Use it for my work', 'Work prompt', 'Reusable output template', 'Work review checklist', 'Practise with an example', 'Before you begin', 'Try it, step by step', 'Your starting prompt', 'Practice materials', 'What good looks like', 'Check before you use it', 'Something to keep', 'If a feature is unavailable', 'Official guidance', 'My notes']:
         assert all_text.count(section) == 24, (track, section, all_text.count(section))
     assert all(f'DAY {day:02d} /' in all_text for day in range(1, 25))
     assert all(f'{i + 1} / {len(texts)}' in text for i, text in enumerate(texts))

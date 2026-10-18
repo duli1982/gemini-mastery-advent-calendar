@@ -1,9 +1,10 @@
 import type { Activity, Reference, Tool, TrackId } from '../types';
+import { relatedFor, workFor } from './work';
 
 export const references: Record<string, Reference> = {
   docs: { title: 'Google: writing with Gemini in Docs', url: 'https://support.google.com/docs/answer/13447609?hl=en' },
   gmail: { title: 'Google: collaborate with Gemini in Gmail', url: 'https://support.google.com/mail/answer/14355636?hl=en' },
-  sheets: { title: 'Google: analyze data in Sheets', url: 'https://support.google.com/a/users/answer/9283139?hl=en' },
+  sheets: { title: 'Google: collaborate with Gemini in Sheets', url: 'https://support.google.com/docs/answer/14356410?hl=en&co=GENIE.Platform%3DDesktop' },
   meet: { title: 'Google: Take notes for me in Meet', url: 'https://support.google.com/meet/answer/14754931?hl=en' },
   notebook: { title: 'Google: Gemini Notebook help and source answers', url: 'https://support.google.com/gemininotebook/answer/16269187?hl=en' },
   research: { title: 'Google: Deep Research', url: 'https://support.google.com/gemini/answer/15719111?hl=en' },
@@ -28,10 +29,10 @@ export const fallbackFor = (tools: Tool[]): string => tools.includes('Workspace 
   ? 'If meeting notes are unavailable or inappropriate for the meeting, use the fictional notes here or your own permitted notes. Complete the review and action log in Docs.'
   : 'If the Gemini side panel is unavailable, use the approved Gemini app with this fictional practice text, or complete the same steps manually in a Doc. No connection to this learning site is required.';
 
-type LessonInput = Omit<Activity, 'id' | 'track' | 'day' | 'phase' | 'verified' | 'references' | 'fallback'> & { refs?: string[]; fallback?: string };
+type LessonInput = Omit<Activity, 'id' | 'track' | 'day' | 'phase' | 'verified' | 'references' | 'fallback' | 'work' | 'related'> & { refs?: string[]; fallback?: string };
 export function lesson(track: TrackId, day: number, input: LessonInput): Activity {
   const { refs = ['docs'], ...fields } = input;
   return { ...fields, id: `${track}-${String(day).padStart(2, '0')}`, track, day,
     phase: track === 'business' ? 'Practical work, one useful task at a time' : ['Everyday essentials', 'Work with evidence', 'Across the business', 'Reuse & automate'][Math.floor((day - 1) / 6)],
-    verified: '2026-10-18', references: refs.map(ref => references[ref]), fallback: input.fallback || fallbackFor(input.tools) };
+    verified: '2026-10-18', references: refs.map(ref => references[ref]), fallback: input.fallback || fallbackFor(input.tools), work: workFor(track, day), related: relatedFor(track, day) };
 }
