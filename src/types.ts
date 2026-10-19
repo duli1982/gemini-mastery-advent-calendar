@@ -25,4 +25,4 @@ export interface Activity {
 export interface Track { id: TrackId; name: string; eyebrow: string; description: string; color: string; activities: Activity[] }
 export interface ActivityProgress { opened: boolean; tried: boolean; saved: boolean; used: boolean }
 export type Progress = Record<string, ActivityProgress>;
-export interface Filters { search: string; department: string; tool: string; savedOnly: boolean; task?: TaskId | ''; maxMinutes?: number; level?: Experience | '' }
+export interface Filters { search: string; department: string; tool: string; savedOnly: boolean; unopenedOnly?: boolean; task?: TaskId | ''; maxMinutes?: number; level?: Experience | '' }

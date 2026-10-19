@@ -7,8 +7,11 @@
     "dev": "vite --host 127.0.0.1 --port 3006",
     "dev:review": "vite --mode review --host 127.0.0.1 --port 3006",
     "build": "tsc --noEmit && vite build",
+    "build:hosting": "tsx scripts/build-hosting.ts",
+    "build:team-review": "tsc --noEmit && vite build --mode team-review",
     "preview": "vite preview --host 127.0.0.1 --port 3007",
-    "test": "tsx --test tests/core.test.ts",
+    "preview:team-review": "vite preview --outDir dist-team-review --host 127.0.0.1 --port 3008",
+    "test": "tsx --test tests/core.test.ts tests/review-build.test.ts tests/reminders.test.ts",
     "test:browser": "playwright test",
     "workbooks": "tsx scripts/workbooks.ts"
   },

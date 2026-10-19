@@ -1,0 +1,39 @@
+/* Calendar-only controls: full-width native selects match the task discovery view. */
+.calendar-primary-filters{display:grid;grid-template-columns:2fr 1fr 1fr;gap:14px;align-items:end;margin:0 0 18px}
+.calendar-primary-filters>label{display:flex;flex-direction:column;gap:8px;color:#c4cedb;font-size:12px;min-width:0}
+.calendar-primary-filters select{display:block;width:100%;max-width:none;min-width:0;min-height:46px;padding:11px 12px;border:1px solid #c2cbd8;border-radius:8px;background:var(--enterprise-offwhite);color:var(--enterprise-navy);font-size:13px;cursor:pointer}
+.calendar-search-control{display:flex;align-items:center;gap:10px;min-height:46px;padding:0 13px;border:1px solid #c2cbd8;border-radius:8px;background:var(--enterprise-offwhite);color:var(--enterprise-navy)}
+.calendar-search-control input{width:100%;min-width:0;padding:12px 0;background:transparent;border:0;color:var(--enterprise-navy);font-size:13px}
+.calendar-search-control input::placeholder{color:var(--enterprise-muted)}
+.calendar-primary-filters select:focus-visible,.calendar-search-control:focus-within{outline:3px solid var(--enterprise-blue);outline-offset:3px}
+.calendar-search-control input:focus-visible{outline:none}
+.calendar-area .extra-filters{margin-top:0;margin-bottom:20px}
+.calendar-area .extra-filters label{font-size:12px;min-width:0}
+.calendar-area .extra-filters select{min-height:46px;font-size:13px;border-radius:8px;cursor:pointer}
+.calendar-progress-filters{display:flex;flex-wrap:wrap;align-items:center;gap:9px;padding-top:17px;border-top:1px solid #384568;margin:0 0 20px}
+.calendar-progress-filters>span{font-size:12px;color:#c4cedb;margin-right:5px}
+.calendar-progress-filters button{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:10px 14px;font-size:12px;border:1px solid #596581;border-radius:8px;background:transparent;color:var(--enterprise-offwhite)}
+.calendar-progress-filters button[aria-pressed=true]{background:var(--enterprise-yellow);border-color:var(--enterprise-yellow);color:var(--enterprise-navy)}
+.calendar-progress-filters button>span{font-size:11px;padding:2px 6px;border-radius:4px;background:#26345e;color:var(--enterprise-offwhite)}
+.calendar-progress-filters button[aria-pressed=true]>span{background:var(--enterprise-navy);color:var(--enterprise-yellow)}
+.calendar-progress-filters button:focus-visible,.reminder-restore button:focus-visible{outline-color:var(--enterprise-yellow)}
+.calendar-area .results-heading{font-size:12px}
+.calendar-reminders{position:relative;display:flex;gap:19px;align-items:flex-start;border:1px solid #627197;border-left:4px solid var(--enterprise-yellow);background:#202c54;color:var(--enterprise-offwhite);border-radius:12px;padding:24px 54px 22px 22px;margin:0 0 28px}
+.reminder-symbol{display:flex;align-items:center;justify-content:center;background:var(--enterprise-yellow);color:var(--enterprise-navy);width:45px;height:45px;border-radius:10px;flex-shrink:0}
+.reminder-body{min-width:0;flex:1}.reminder-body>.eyebrow{color:#9fc9d4;margin:0 0 7px;font-size:9px}
+.reminder-body h2{font-size:24px;line-height:1.3;margin:0 0 8px;letter-spacing:-.025em;color:var(--enterprise-offwhite)}
+.reminder-body>p:not(.eyebrow){color:#d5dcea;font-size:13px;line-height:1.7;margin:0}
+.reminder-duration{white-space:nowrap;color:#c4cedb}.reminder-detail{display:block;margin-top:4px}
+.reminder-actions{display:flex;align-items:center;flex-wrap:wrap;gap:10px 18px;margin-top:16px}.reminder-actions:empty{display:none}
+.reminder-actions .button{font-size:12px;padding:11px 14px;min-height:44px}.reminder-actions .secondary:hover{background:#e5edf6}
+.reminder-actions>.text-button{color:var(--enterprise-offwhite);font-size:12px}
+.reminder-preferences{display:flex;align-items:center;flex-wrap:wrap;gap:5px 18px;margin-top:12px;font-size:11px;color:#c4cedb}
+.reminder-preferences .text-button{font-size:11px;min-height:34px;text-decoration:underline;text-underline-offset:3px;color:#d5dcea}
+.reminder-dismiss{position:absolute;right:11px;top:11px;color:#d5dcea}.reminder-dismiss:hover{background:#34416a}
+.calendar-reminders button:focus-visible{outline-color:var(--enterprise-yellow)}.calendar-reminders .primary:focus-visible{outline-color:var(--enterprise-offwhite)}
+.reminder-restore{display:flex;justify-content:flex-end;margin-bottom:16px;color:var(--enterprise-offwhite)}
+.reminder-restore button{min-height:44px;font-size:12px}.reminder-restore span{font-size:11px;color:#c4cedb;padding-left:5px}
+.calendar-reminders.caught-up{border-left-color:var(--enterprise-turquoise)}
+.toast.show{flex-wrap:wrap}.toast.show>.text-button{min-height:36px;white-space:nowrap;text-decoration:underline;text-underline-offset:3px}
+@media(max-width:900px){.calendar-primary-filters{grid-template-columns:1fr 1fr}.calendar-primary-filters>label:first-child{grid-column:1/-1}}
+@media(max-width:540px){.calendar-primary-filters{gap:14px 12px}.calendar-primary-filters select{font-size:12px;padding:10px}.calendar-search-control input{font-size:12px}.calendar-progress-filters{gap:8px}.calendar-progress-filters>span{width:100%;margin-bottom:1px}.calendar-progress-filters button{font-size:11px;padding:10px 11px;flex:1;justify-content:center}.calendar-progress-filters button>span{font-size:10px}.calendar-reminders{padding:21px 18px 17px;gap:12px;margin-bottom:22px}.reminder-symbol{width:32px;height:32px;border-radius:8px}.reminder-symbol svg{width:19px}.reminder-body{padding-right:0}.reminder-body>.eyebrow{padding-right:20px;font-size:8px;letter-spacing:.12em}.reminder-body h2{font-size:21px;padding-right:12px}.reminder-body>p:not(.eyebrow){font-size:12px}.reminder-dismiss{right:3px;top:4px;width:32px;height:32px}.reminder-actions{gap:9px;align-items:stretch}.reminder-actions>.button{width:100%;font-size:11px;padding:11px}.reminder-actions>.text-button{font-size:11px;line-height:1.5;text-align:left}.reminder-preferences{gap:3px;margin-top:10px}.reminder-preferences>span{font-size:10px}.reminder-restore{justify-content:flex-start}.calendar-area .extra-filters{gap:14px 12px}.calendar-area .extra-filters select{font-size:12px}.calendar-area .results-heading{font-size:11px;gap:12px}.calendar-area .results-heading .text-button{font-size:11px}}

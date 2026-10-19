@@ -1,5 +1,7 @@
 node_modules/
 dist/
+dist-team-review/
+.vercel/
 test-results/
 playwright-report/
 tmp/

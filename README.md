@@ -18,7 +18,7 @@ npm run build
 npm run preview
 ```
 
-The production preview is http://127.0.0.1:3007. Deploy the `dist` folder to static hosting when ready. A Vercel configuration is supplied; nothing is published automatically.
+The production preview is http://127.0.0.1:3007. Deploy the `dist` folder to static hosting when ready. The connected Vercel project builds Git pushes using `npm run build:hosting`: production and ordinary branches use dates; the dedicated team-review Preview branch opens all doors. See [TEAM_REVIEW.md](TEAM_REVIEW.md) for sharing, access settings and removal.
 
 ## Calendar and learner behavior
 
@@ -26,10 +26,14 @@ The production preview is http://127.0.0.1:3007. Deploy the `dist` folder to sta
 - Stable lesson links: `?track=guided&day=21` or `?track=business&day=5`. Task discovery is `?view=discover`, combined saves are `?view=saved`, and the year-round toolkit is `?view=toolkit` (for example `?view=toolkit&task=email`). Invalid and mixed routes show the chooser. Browser back/forward works.
 - Day N unlocks at 00:00 on December N, 2026 in the visitor's local timezone. It stays available in January 2027 and later. Both full workbooks unlock December 24.
 - Eight separate Everyday Toolkit work templates are always available. They show reusable work instructions and department examples, while their calendar lessons, practice solutions and full workbook downloads retain the December locks. Studio and video setup are not presented as instant tasks.
-- `npm run dev:review` is an explicitly separate development mode. All production builds, including `vite build --mode review`, disable review access. There is no `openAll` URL override.
+- `npm run dev:review` is a separate development mode. Normal builds, including `vite build --mode review`, disable review access. The explicit `npm run build:team-review` creates an all-open build in `dist-team-review` and rejects Vercel production deployment. There is no `openAll` URL override. The temporary review branch and enable switch are in `team-review.config.json`.
 - This static date gate supports the learning experience; lesson content is bundled, so it is not access control for confidential material.
 - Opened, tried, saved and used-at-work are independent browser-local flags, isolated by edition, track and activity. Earlier 2026 progress gains `used: false` without losing other flags. No 2025 progress is imported. An Everyday Toolkit template can be saved/used before December without opening or completing its locked calendar lesson. Filters are retained while switching calendar tracks within a session; they reset on reload.
 - Discovery searches both tracks with common task synonyms, task/department/tool filters, duration and experience. Locked lessons expose discovery metadata only. Business lessons start in work mode; guided lessons start with practice. Every lesson links to a related activity in the other track, with that activity's normal unlock date.
+- Each calendar has full-width labelled search, department and tool controls, plus All activities / Unopened / Saved progress filters. Unopened means available and not opened, not merely untried. Catch-up clears other filters in that track so waiting activities are visible. The discovery page retains its existing layout.
+- During the public December release, a combined reminder shows today's door, earlier unopened activities, an optional practice suggestion or an up-to-date message. An unlock while the site is in use produces one short notification with an Open action; returning to a tab refreshes its clock. Dates use the visitor's local timezone. Reminders do not repeat the 2026 daily schedule in 2027, although unopened activities remain available.
+- Dismiss for today is stored separately for each track and expires at local midnight. Remind me next visit hides the panel until the page is reloaded or reopened; moving between tracks/pages in the current visit does not undo it. Show calendar reminders restores the panel immediately. Progress and preferences update between open tabs on the same origin. Blocked storage leaves in-memory reminders usable and provides feedback.
+- These are in-app reminders only: no browser permission, push service, email or Google Chat sender is added. The review versions show their all-open banner and Unopened filter without date-driven reminders. Daily company announcements, if desired, need a separately configured communication channel; this browser-local site cannot identify absent employees.
 - The most recently visited lesson or starter template is kept for Continue where I stopped. Toolkit backup/export stores activity IDs and progress flags only. Import validates the edition and flags and merges them without clearing existing progress. Browser-local progress does not sync automatically.
 - No analytics, sign-in, backend, external fonts or company account connection. Employees use the copied instructions in their own approved Google tools. Test Studio runs are real actions in those tools and use learner-owned test notifications.
 
@@ -41,6 +45,8 @@ Edit `src/content/business.ts` and `src/content/guided.ts` for the learning acti
 
 The supplied Enterprise palette is implemented in `src/enterprise.css`: navy `#0F1941`, guiding yellow `#E6FF00`, Randstad blue `#2175D9`, off-white `#F7F5F0`, and turquoise `#6BA5B4`. These values were sampled from the supplied reference. Navy dominates page backgrounds; yellow identifies selected controls and key actions; light lesson surfaces keep the text readable. The favicon, browser theme color and workbook renderer use the same palette. Layout rules remain in `src/styles.css`.
 
+`src/lib/reminders.ts` defines reminder summaries and local preference storage. `src/components/CalendarReminders.tsx` renders the combined panel; `src/calendar.css` styles that panel and the calendar-only filter layout. These do not change the existing discovery-page filter styles or workbook content.
+
 Each lesson includes its full learning activity plus Use it for my work and Practise with an example. Copy work prompt contains no fictional case data. Copy prompt + practice inputs includes the actual fictional inputs but excludes worked answers. Copy activity link preserves the current lesson or starter URL. Work job aids download as readable text with inputs, prompt, output template, checks and sources; table templates use tabs for pasting into Sheets. No company-owned template links are invented. Historical comparison notes remain editorial metadata only.
 
 Google documentation was checked on 18 October 2026. These exercises have not been executed inside a Randstad tenant. Recheck documentation, tenant access and current Gems/Skills naming before launch. Keep Workspace Studio distinct from Google's creative-media product. Do not convert fictional procedures into claims about internal policy.
@@ -51,6 +57,7 @@ Google documentation was checked on 18 October 2026. These exercises have not be
 npm test
 npx playwright install chromium
 npm run build
+npm run build:team-review
 npm run test:browser
 npm run workbooks
 ```
@@ -59,7 +66,7 @@ npm run workbooks
 
 Core tests cover content completeness, CSV structure, date boundaries in four timezones, route validation, progress isolation/storage failures, and locked-content search. Browser tests exercise both tracks, saved/tried behavior, downloads, clipboard fallback, keyboard focus, production date gating and mobile layouts. Automated accessibility checks cover WCAG A/AA issues; keyboard and visual review supplement them.
 
-Latest verified result: 17 core tests and 20 browser tests passed, including six automated accessibility checks. The production build passes. See `output/VERIFICATION.md` for the verification record. `PILOT.md` describes the remaining company-account pilot; software tests do not establish Google tenant availability or measured employee benefits.
+See `output/VERIFICATION.md` for the latest verification record. `PILOT.md` describes the remaining company-account pilot; software tests do not establish Google tenant availability or measured employee benefits.
 
 For PDF QA, render every page with Poppler into `tmp/pdfs/guided` and `tmp/pdfs/business` (prefix `page`), then run `scripts/inspect-workbooks.py` with Python, Pillow and pypdf. An optional first argument selects a different render directory. Contact sheets and inspection metadata are written to `output/qa`. Browser tests generate app screenshots in `output/screenshots`. These generated QA files are ignored by Git; the complete workbooks in `output/pdf` are included.
 

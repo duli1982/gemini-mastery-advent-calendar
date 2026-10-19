@@ -6,5 +6,6 @@ export default defineConfig({
   webServer: [
     { command: 'npm run dev:review', url: 'http://127.0.0.1:3006', reuseExistingServer: true },
     { command: 'npm run preview', url: 'http://127.0.0.1:3007', reuseExistingServer: true },
+    { command: 'npm run preview:team-review', url: 'http://127.0.0.1:3008', reuseExistingServer: true },
   ],
 });
