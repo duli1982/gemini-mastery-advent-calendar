@@ -9,6 +9,7 @@ import Discovery, { ExtraFilters, TaskShortcuts, newFilters } from './components
 
 const blankFilters = newFilters;
 const REVIEW = __REVIEW__;
+const TEAM_REVIEW = __TEAM_REVIEW__;
 
 function GiftScene() {
   return <div className="gift-scene" aria-hidden="true"><div className="orbit orbit-one" /><div className="orbit orbit-two" /><Star className="scene-star star-one" size={25} /><Star className="scene-star star-two" size={14} /><Sparkles className="scene-sparkle" size={24} /><div className="scene-number">24</div><div className="present present-back"><span className="present-lid" /><span className="present-ribbon" /><span className="bow bow-left" /><span className="bow bow-right" /></div><div className="present present-main"><span className="present-lid" /><span className="present-ribbon" /><span className="bow bow-left" /><span className="bow bow-right" /><span className="present-tag">a brighter<br />way to work.</span></div><div className="scene-note"><span className="note-dot" /> A little discovery. Every day.</div></div>;
@@ -98,7 +99,7 @@ export default function App() {
 
   return <>
     <a className="skip-link" href="#main">Skip to content</a>
-    {REVIEW && <div className="review-banner"><Sparkles size={13} /><span><strong>REVIEW PREVIEW</strong> All 48 activities and both workbooks are open. The published build follows December 2026 dates.</span></div>}
+    {REVIEW && <div className="review-banner"><Sparkles size={13} /><span><strong>{TEAM_REVIEW ? 'TEAM REVIEW' : 'REVIEW PREVIEW'}</strong> All 24 doors in both tracks and both workbooks are open. {TEAM_REVIEW ? 'For the pilot team. The public site follows December 2026 dates.' : 'The published build follows December 2026 dates.'}</span></div>}
     <header className="site-header"><div className="container header-inner"><button className="brand" aria-label="Smarter Work home" onClick={() => navigate({ track: null, day: null })}><span className="brand-mark"><Sparkles size={20} /></span><span>smarter work<span className="brand-sub">RANDSTAD GBS · 2026 EDITION</span></span></button><nav aria-label="Main navigation">{track && <select className="header-track-select" aria-label="Switch track" value={track.id} onChange={event => navigate({ track: event.target.value as TrackId, day: null })}>{tracks.map(t => <option value={t.id} key={t.id}>{t.name}</option>)}</select>}{track ? <button className="text-button back-tracks" onClick={() => navigate({ track: null, day: null })}>Explore both tracks</button> : <a className="text-button" href="#journeys">Find your journey <ArrowDown size={14} /></a>}<span className="season-pill"><Star size={12} /> DECEMBER 1–24</span></nav></div></header>
     <div className="container utility-nav"><button className="text-button" onClick={()=>navigate({track:null,day:null,view:'discover'})}><Search size={15}/>Find a task</button><button className="text-button" onClick={()=>navigate({track:null,day:null,view:'toolkit'})}><BriefcaseBusiness size={15}/>Everyday Toolkit</button><button className="text-button" onClick={()=>navigate({track:null,day:null,view:'saved'})}><Bookmark size={15}/>My saved toolkit</button>{resume && <button className="text-button continue-button" onClick={()=>navigate(resume)}>Continue where I stopped<ArrowRight size={15}/></button>}</div>
     <main id="main">

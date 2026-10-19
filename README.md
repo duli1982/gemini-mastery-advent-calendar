@@ -18,7 +18,7 @@ npm run build
 npm run preview
 ```
 
-The production preview is http://127.0.0.1:3007. Deploy the `dist` folder to static hosting when ready. A Vercel configuration is supplied; nothing is published automatically.
+The production preview is http://127.0.0.1:3007. Deploy the `dist` folder to static hosting when ready. The connected Vercel project builds Git pushes using `npm run build:hosting`: production and ordinary branches use dates; the dedicated team-review Preview branch opens all doors. See [TEAM_REVIEW.md](TEAM_REVIEW.md) for sharing, access settings and removal.
 
 ## Calendar and learner behavior
 
@@ -26,7 +26,7 @@ The production preview is http://127.0.0.1:3007. Deploy the `dist` folder to sta
 - Stable lesson links: `?track=guided&day=21` or `?track=business&day=5`. Task discovery is `?view=discover`, combined saves are `?view=saved`, and the year-round toolkit is `?view=toolkit` (for example `?view=toolkit&task=email`). Invalid and mixed routes show the chooser. Browser back/forward works.
 - Day N unlocks at 00:00 on December N, 2026 in the visitor's local timezone. It stays available in January 2027 and later. Both full workbooks unlock December 24.
 - Eight separate Everyday Toolkit work templates are always available. They show reusable work instructions and department examples, while their calendar lessons, practice solutions and full workbook downloads retain the December locks. Studio and video setup are not presented as instant tasks.
-- `npm run dev:review` is an explicitly separate development mode. All production builds, including `vite build --mode review`, disable review access. There is no `openAll` URL override.
+- `npm run dev:review` is a separate development mode. Normal builds, including `vite build --mode review`, disable review access. The explicit `npm run build:team-review` creates an all-open build in `dist-team-review` and rejects Vercel production deployment. There is no `openAll` URL override. The temporary review branch and enable switch are in `team-review.config.json`.
 - This static date gate supports the learning experience; lesson content is bundled, so it is not access control for confidential material.
 - Opened, tried, saved and used-at-work are independent browser-local flags, isolated by edition, track and activity. Earlier 2026 progress gains `used: false` without losing other flags. No 2025 progress is imported. An Everyday Toolkit template can be saved/used before December without opening or completing its locked calendar lesson. Filters are retained while switching calendar tracks within a session; they reset on reload.
 - Discovery searches both tracks with common task synonyms, task/department/tool filters, duration and experience. Locked lessons expose discovery metadata only. Business lessons start in work mode; guided lessons start with practice. Every lesson links to a related activity in the other track, with that activity's normal unlock date.
@@ -51,6 +51,7 @@ Google documentation was checked on 18 October 2026. These exercises have not be
 npm test
 npx playwright install chromium
 npm run build
+npm run build:team-review
 npm run test:browser
 npm run workbooks
 ```
@@ -59,7 +60,7 @@ npm run workbooks
 
 Core tests cover content completeness, CSV structure, date boundaries in four timezones, route validation, progress isolation/storage failures, and locked-content search. Browser tests exercise both tracks, saved/tried behavior, downloads, clipboard fallback, keyboard focus, production date gating and mobile layouts. Automated accessibility checks cover WCAG A/AA issues; keyboard and visual review supplement them.
 
-Latest verified result: 17 core tests and 20 browser tests passed, including six automated accessibility checks. The production build passes. See `output/VERIFICATION.md` for the verification record. `PILOT.md` describes the remaining company-account pilot; software tests do not establish Google tenant availability or measured employee benefits.
+See `output/VERIFICATION.md` for the latest verification record. `PILOT.md` describes the remaining company-account pilot; software tests do not establish Google tenant availability or measured employee benefits.
 
 For PDF QA, render every page with Poppler into `tmp/pdfs/guided` and `tmp/pdfs/business` (prefix `page`), then run `scripts/inspect-workbooks.py` with Python, Pillow and pypdf. An optional first argument selects a different render directory. Contact sheets and inspection metadata are written to `output/qa`. Browser tests generate app screenshots in `output/screenshots`. These generated QA files are ignored by Git; the complete workbooks in `output/pdf` are included.
 
