@@ -78,7 +78,7 @@ export function filterActivities(activities: Activity[], filters: Filters, progr
     // Locked activities expose discovery metadata only, even to search.
     const searchable = normalizeSearch([activity.title, activity.summary, ...activity.departments, ...activity.tools, ...activity.work.tasks.map(id => tasks.find(t => t.id === id)!.title), ...(unlocked ? [activity.prompt, ...activity.steps, activity.takeaway, activity.work.prompt] : [])].join(' '));
     const textMatch = !query || query.split(' ').every(word => searchable.includes(word)) || matchedTasks.some(id => activity.work.tasks.includes(id));
-    return textMatch && (!filters.task || activity.work.tasks.includes(filters.task)) && (!filters.maxMinutes || activity.minutes <= filters.maxMinutes) && (!filters.level || activity.work.level === filters.level) && (!filters.department || activity.departments.includes(filters.department) || activity.departments.includes('Everyone')) && (!filters.tool || activity.tools.some(tool => tool === filters.tool)) && (!filters.savedOnly || progress[activity.id]?.saved);
+    return textMatch && (!filters.task || activity.work.tasks.includes(filters.task)) && (!filters.maxMinutes || activity.minutes <= filters.maxMinutes) && (!filters.level || activity.work.level === filters.level) && (!filters.department || activity.departments.includes(filters.department) || activity.departments.includes('Everyone')) && (!filters.tool || activity.tools.some(tool => tool === filters.tool)) && (!filters.savedOnly || progress[activity.id]?.saved) && (!filters.unopenedOnly || (unlocked && !progress[activity.id]?.opened));
   });
 }
 
