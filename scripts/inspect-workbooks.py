@@ -13,6 +13,9 @@ for track in ['guided', 'business']:
     reader = PdfReader(pdf)
     texts = [page.extract_text() or '' for page in reader.pages]
     all_text = '\n'.join(texts)
+    assert 'randstad' not in (all_text + str(reader.metadata)).lower()
+    assert 'gbs' not in (all_text + str(reader.metadata)).lower()
+    assert 'FROM THE PEOPLE, TO THE PEOPLE.' in all_text
     assert 'From 2025 to 2026' not in all_text
     for section in ['Use it for my work', 'Work prompt', 'Reusable output template', 'Work review checklist', 'Practise with an example', 'Before you begin', 'Try it, step by step', 'Your starting prompt', 'Practice materials', 'What good looks like', 'Check before you use it', 'Something to keep', 'If a feature is unavailable', 'Official guidance', 'My notes']:
         assert all_text.count(section) == 24, (track, section, all_text.count(section))

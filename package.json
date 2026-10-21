@@ -1,5 +1,5 @@
 {
-  "name": "randstad-gbs-ai-at-work-2026",
+  "name": "smarter-work-2026",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -11,7 +11,7 @@
     "build:team-review": "tsc --noEmit && vite build --mode team-review",
     "preview": "vite preview --host 127.0.0.1 --port 3007",
     "preview:team-review": "vite preview --outDir dist-team-review --host 127.0.0.1 --port 3008",
-    "test": "tsx --test tests/core.test.ts tests/review-build.test.ts tests/reminders.test.ts",
+    "test": "tsx --test tests/core.test.ts tests/review-build.test.ts tests/reminders.test.ts tests/welcome.test.ts",
     "test:browser": "playwright test",
     "workbooks": "tsx scripts/workbooks.ts"
   },

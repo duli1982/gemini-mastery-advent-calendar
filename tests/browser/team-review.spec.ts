@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 
 test('hostable team review opens all 24 doors in both tracks before December',async({page})=>{
   await page.clock.install({time:new Date('2026-10-19T09:00:00Z')});

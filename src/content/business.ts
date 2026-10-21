@@ -175,7 +175,7 @@ export const businessActivities = [
     steps: ['Check source title, version, effective date and scope.', 'Ask how to handle an urgent contractor payroll-access request.', 'Open the evidence and distinguish an explicit rule from interpretation.', 'Write the referral question for the system owner.'],
     prompt: 'Use only this procedure to answer: can a contractor receive emergency payroll access tonight through this process? Cite the version, scope and section. Explain what the source establishes and what it cannot decide. Draft a question to the responsible owner. Do not provide a legal conclusion or invent an exception.\n\nPaste the procedure.',
     practiceIds: ['procedure'], expected: ['The case is outside this procedure.', 'The answer refers to the system owner and does not authorize access.'],
-    checks: ['This example is never described as a real Randstad policy.', 'Missing rules remain unresolved rather than becoming AI advice.'],
+    checks: ['This example is never described as real company policy.', 'Missing rules remain unresolved rather than becoming AI advice.'],
     takeaway: 'A source-backed answer with an appropriate escalation question.', advanced: 'Compare the previous version and explain which one applies on 10 December.', refs: ['notebook'],
     difference: 'Replaces a general compliance checklist with answers tied to current source text.',
   }),

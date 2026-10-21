@@ -2,6 +2,7 @@ import { jsPDF } from 'jspdf';
 import type { Track } from '../types';
 import { practices } from '../content/practice';
 import { departmentVariants } from '../content/work';
+import { SITE_NAME, TAGLINE } from '../identity';
 
 type RGB = [number, number, number];
 const NAVY: RGB = [15, 25, 65];
@@ -19,7 +20,7 @@ export function createWorkbook(track: Track) {
   const width = 210, height = 297, margin = 21, bottom = 275, contentWidth = width - margin * 2;
   let y = 25;
   let currentLabel = track.name;
-  doc.setProperties({ title: `${track.name} - 24 Days of Smarter Work 2026`, subject: 'Randstad GBS learning workbook', author: '24 Days of Smarter Work', creator: 'Smarter Work learning site' });
+  doc.setProperties({ title: `${track.name} - ${SITE_NAME} 2026`, subject: TAGLINE, author: SITE_NAME, creator: 'Smarter Work learning site' });
   const newPage = () => { doc.addPage(); y = 30; doc.setFillColor(...PAPER); doc.rect(0, 0, width, height, 'F'); doc.setFontSize(8); doc.setTextColor(...MUTED); doc.setFont('helvetica', 'normal'); doc.text(ascii(currentLabel.toUpperCase()), margin, 14); doc.setDrawColor(...TURQUOISE); doc.line(margin, 18, width - margin, 18); };
   const ensure = (space: number) => { if (y + space > bottom) newPage(); };
   function text(value: string, size = 10, color: RGB = NAVY, bold = false, indent = 0) {
@@ -45,7 +46,8 @@ export function createWorkbook(track: Track) {
   doc.setFillColor(...PAPER); doc.rect(0, 0, width, height, 'F');
   doc.setFillColor(...NAVY); doc.rect(0, 0, width, 197, 'F');
   doc.setFillColor(...YELLOW); doc.rect(0, 197, 146, 3, 'F'); doc.setFillColor(...BLUE); doc.rect(146, 197, 38, 3, 'F'); doc.setFillColor(...TURQUOISE); doc.rect(184, 197, 26, 3, 'F');
-  doc.setTextColor(...YELLOW); doc.setFontSize(10); doc.text('RANDSTAD GBS / 2026 EDITION', margin, 32);
+  doc.setTextColor(...YELLOW); doc.setFontSize(10); doc.text(ascii(TAGLINE.toUpperCase()), margin, 32);
+  doc.setFontSize(8); doc.text('2026 EDITION', margin, 39);
   doc.setFont('times', 'normal'); doc.setFontSize(41); doc.setTextColor(...PAPER);
   doc.text(['24 days.', 'A smarter way', 'to work.'], margin, 66, { lineHeightFactor: 1.15 });
   doc.setDrawColor(...YELLOW); doc.line(margin, 130, margin + 33, 130);
@@ -122,7 +124,7 @@ export function createWorkbook(track: Track) {
   const count = doc.getNumberOfPages();
   for (let page = 1; page <= count; page++) {
     doc.setPage(page); doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(...MUTED);
-    doc.text('24 Days of Smarter Work / Randstad GBS / 2026', margin, height - 12);
+    doc.text(ascii(`${SITE_NAME} / 2026`), margin, height - 12);
     doc.text(`${page} / ${count}`, width - margin, height - 12, { align: 'right' });
   }
   return doc;

@@ -1,4 +1,6 @@
-# 24 Days of Smarter Work - Randstad GBS
+# 24 Days of Smarter Work
+
+From the People, to the People. Practical ways to use AI in everyday work, collected in one place.
 
 A complete 2026 edition of the original Gemini Mastery advent calendar: one React application, two tracks, 48 fully authored activities and two PDF workbooks. The previous edition remains available in the repository's Git history.
 
@@ -22,6 +24,7 @@ The production preview is http://127.0.0.1:3007. Deploy the `dist` folder to sta
 
 ## Calendar and learner behavior
 
+- First-time visitors see a short How to use guide explaining both tracks, Open / Try / Keep, work versus practice prompts, local progress and calendar access. Closing it is remembered under the edition-specific welcome key, independently of progress. The permanent header button reopens it; Escape closes it and manual opening restores focus to that button. Incoming lesson/toolkit links are preserved, with only one modal open at a time. If storage is blocked, it remains dismissible for the current visit and explains why it may reappear.
 - Guided Learning is a four-chapter sequence; Business Activities is a practical departmental collection. Neither track requires completion of earlier lessons.
 - Stable lesson links: `?track=guided&day=21` or `?track=business&day=5`. Task discovery is `?view=discover`, combined saves are `?view=saved`, and the year-round toolkit is `?view=toolkit` (for example `?view=toolkit&task=email`). Invalid and mixed routes show the chooser. Browser back/forward works.
 - Day N unlocks at 00:00 on December N, 2026 in the visitor's local timezone. It stays available in January 2027 and later. Both full workbooks unlock December 24.
@@ -39,17 +42,19 @@ The production preview is http://127.0.0.1:3007. Deploy the `dist` folder to sta
 
 ## Content maintenance
 
+`src/identity.ts` contains the site name, the From the People, to the People attribution and the collection description. The guide is in `src/components/WelcomeGuide.tsx`; its preference helper is in `src/lib/welcome.ts`, and responsive guide/header styling is in `src/welcome.css`. Static browser metadata is in `index.html`. Workbooks and job aids use the same neutral attribution. Do not imply the fictional exercises are proven company workflows or verified colleague contributions.
+
 Edit `src/content/business.ts` and `src/content/guided.ts` for the learning activities. `src/content/work.ts` contains all work guides, cross-track links, the eight task categories, and twelve department variations covering eight departments. Each guide has a use case, inputs, app link, steps, reusable prompt, output, template, checks, duration and experience level. Department variations also carry their own app and workflow instructions. Keep IDs stable so progress matches the same lesson.
 
 `src/content/practice.ts` contains fictional text/CSV inputs and separate worked explanations. `exercisePrompt` copies only inputs and rules. Keep solutions out of input text; the Reveal the worked example section renders solutions after the learner runs the exercise. Shared official references and access fallbacks live in `src/content/shared.ts`.
 
-The supplied Enterprise palette is implemented in `src/enterprise.css`: navy `#0F1941`, guiding yellow `#E6FF00`, Randstad blue `#2175D9`, off-white `#F7F5F0`, and turquoise `#6BA5B4`. These values were sampled from the supplied reference. Navy dominates page backgrounds; yellow identifies selected controls and key actions; light lesson surfaces keep the text readable. The favicon, browser theme color and workbook renderer use the same palette. Layout rules remain in `src/styles.css`.
+The supplied Enterprise palette is implemented in `src/enterprise.css`: navy `#0F1941`, guiding yellow `#E6FF00`, blue `#2175D9`, off-white `#F7F5F0`, and turquoise `#6BA5B4`. These values were sampled from the supplied reference. Navy dominates page backgrounds; yellow identifies selected controls and key actions; light lesson surfaces keep the text readable. The favicon, browser theme color and workbook renderer use the same palette. Layout rules remain in `src/styles.css`.
 
 `src/lib/reminders.ts` defines reminder summaries and local preference storage. `src/components/CalendarReminders.tsx` renders the combined panel; `src/calendar.css` styles that panel and the calendar-only filter layout. These do not change the existing discovery-page filter styles or workbook content.
 
 Each lesson includes its full learning activity plus Use it for my work and Practise with an example. Copy work prompt contains no fictional case data. Copy prompt + practice inputs includes the actual fictional inputs but excludes worked answers. Copy activity link preserves the current lesson or starter URL. Work job aids download as readable text with inputs, prompt, output template, checks and sources; table templates use tabs for pasting into Sheets. No company-owned template links are invented. Historical comparison notes remain editorial metadata only.
 
-Google documentation was checked on 18 October 2026. These exercises have not been executed inside a Randstad tenant. Recheck documentation, tenant access and current Gems/Skills naming before launch. Keep Workspace Studio distinct from Google's creative-media product. Do not convert fictional procedures into claims about internal policy.
+Google documentation was checked on 18 October 2026. These exercises have not been executed inside a company tenant. Recheck documentation, tenant access and current Gems/Skills naming before launch. Keep Workspace Studio distinct from Google's creative-media product. Do not convert fictional procedures into claims about internal policy.
 
 ## Workbooks and verification
 

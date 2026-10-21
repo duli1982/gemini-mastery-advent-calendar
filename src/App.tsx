@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowDown, ArrowRight, Bookmark, BookOpen, BriefcaseBusiness, Check, CheckCircle2, Clock3, Download, Gift, Grid2X2, Library, LockKeyhole, Search, Sparkles, Star, X } from 'lucide-react';
+import { ArrowDown, ArrowRight, Bookmark, BookOpen, BriefcaseBusiness, Check, CheckCircle2, CircleHelp, Clock3, Download, Gift, Grid2X2, Library, LockKeyhole, Search, Sparkles, Star, X } from 'lucide-react';
 import { allActivities, tracks } from './content';
 import { tasks } from './content/work';
 import type { Activity, ActivityProgress, Filters, Progress, TrackId } from './types';
@@ -7,6 +7,9 @@ import { countdown, emptyProgress, filterActivities, isUnlocked, mergeProgress, 
 import Lesson from './components/Lesson';
 import Discovery, { ExtraFilters, TaskShortcuts, newFilters } from './components/Discovery';
 import CalendarReminders from './components/CalendarReminders';
+import WelcomeGuide from './components/WelcomeGuide';
+import { COLLECTION_DESCRIPTION, SITE_NAME, TAGLINE } from './identity';
+import { hasSeenWelcome, rememberWelcome } from './lib/welcome';
 import { calendarSummary, emptyReminderPreferences, localDayKey, readReminderPreferences, writeReminderPreferences, type ReminderPreferences } from './lib/reminders';
 
 const blankFilters = newFilters;
@@ -28,6 +31,7 @@ function ActivityCard({ activity: a, progress, unlocked, list, onOpen, onSave }:
 
 export default function App() {
   const [route, setRoute] = useState<Route>(() => parseRoute(window.location.search));
+  const [guideOpen,setGuideOpen] = useState(()=>{try{return !hasSeenWelcome(window.localStorage);}catch{return true;}});
   const [now, setNow] = useState(() => new Date());
   const [progress, setProgress] = useState<Progress>({});
   const [storageWarning, setStorageWarning] = useState(false);
@@ -66,7 +70,7 @@ export default function App() {
     return () => { clearInterval(timer); window.removeEventListener('popstate', pop); window.removeEventListener('focus',refreshTime); document.removeEventListener('visibilitychange',refreshTime); window.removeEventListener('storage',syncStorage); };
   }, []);
   useEffect(() => { if (!toast) return; const timer = setTimeout(() => setToast(''), 6000); return () => clearTimeout(timer); }, [toast]);
-  useEffect(() => { document.title = activity ? `${activity.title} | Day ${activity.day} | Smarter Work` : track ? `${track.name} | Smarter Work 2026` : '24 Days of Smarter Work | Randstad GBS'; }, [track, activity]);
+  useEffect(() => { document.title = activity ? `${activity.title} | Day ${activity.day} | Smarter Work` : track ? `${track.name} | Smarter Work 2026` : `${SITE_NAME} | ${TAGLINE}`; }, [track, activity]);
 
   const updateProgress = useCallback((a: Activity, update: Partial<ActivityProgress>, workAccess = false) => {
     const unlocked = isUnlocked(a.day, new Date(), REVIEW);
@@ -78,13 +82,19 @@ export default function App() {
       return next;
     });
   }, []);
-  useEffect(() => { if (activity && !workOnly && isUnlocked(activity.day, now, REVIEW) && !progress[activity.id]?.opened) updateProgress(activity, { opened: true }); }, [activity, workOnly, now, progress, updateProgress]);
+  useEffect(() => { if (!guideOpen && activity && !workOnly && isUnlocked(activity.day, now, REVIEW) && !progress[activity.id]?.opened) updateProgress(activity, { opened: true }); }, [activity, workOnly, now, progress, updateProgress, guideOpen]);
   useEffect(()=>{
-    if (!activity) return;
+    if (!activity || guideOpen) return;
     const next:Route = workOnly ? { track:null,day:null,view:'toolkit',task:toolkitTask!.id } : { track:activity.track,day:activity.day };
     setResume(next);
     try { window.localStorage.setItem(resumeKey, new URLSearchParams(routeUrl(next).split('?')[1]).toString()); } catch { setStorageWarning(true); }
-  },[activity?.id, workOnly, toolkitTask?.id]);
+  },[activity?.id, workOnly, toolkitTask?.id, guideOpen]);
+
+  const closeGuide = () => {
+    setGuideOpen(false);
+    try { if(!rememberWelcome(window.localStorage)) notify('Guide closed for this visit. Your browser could not remember this preference.'); }
+    catch { notify('Guide closed for this visit. Your browser could not remember this preference.'); }
+  };
 
   const navigate = (next: Route, replace = false) => {
     window.history[replace ? 'replaceState' : 'pushState']({}, '', routeUrl(next));
@@ -149,11 +159,11 @@ export default function App() {
   return <>
     <a className="skip-link" href="#main">Skip to content</a>
     {REVIEW && <div className="review-banner"><Sparkles size={13} /><span><strong>{TEAM_REVIEW ? 'TEAM REVIEW' : 'REVIEW PREVIEW'}</strong> All 24 doors in both tracks and both workbooks are open. {TEAM_REVIEW ? 'For the pilot team. The public site follows December 2026 dates.' : 'The published build follows December 2026 dates.'}</span></div>}
-    <header className="site-header"><div className="container header-inner"><button className="brand" aria-label="Smarter Work home" onClick={() => navigate({ track: null, day: null })}><span className="brand-mark"><Sparkles size={20} /></span><span>smarter work<span className="brand-sub">RANDSTAD GBS · 2026 EDITION</span></span></button><nav aria-label="Main navigation">{track && <select className="header-track-select" aria-label="Switch track" value={track.id} onChange={event => navigate({ track: event.target.value as TrackId, day: null })}>{tracks.map(t => <option value={t.id} key={t.id}>{t.name}</option>)}</select>}{track ? <button className="text-button back-tracks" onClick={() => navigate({ track: null, day: null })}>Explore both tracks</button> : <a className="text-button" href="#journeys">Find your journey <ArrowDown size={14} /></a>}<span className="season-pill"><Star size={12} /> DECEMBER 1–24</span></nav></div></header>
+    <header className="site-header"><div className="container header-inner"><button className="brand" aria-label="Smarter Work home" onClick={() => navigate({ track: null, day: null })}><span className="brand-mark"><Sparkles size={20} /></span><span>smarter work<span className="brand-sub">{TAGLINE}</span></span></button><nav aria-label="Main navigation">{track && <select className="header-track-select" aria-label="Switch track" value={track.id} onChange={event => navigate({ track: event.target.value as TrackId, day: null })}>{tracks.map(t => <option value={t.id} key={t.id}>{t.name}</option>)}</select>}{track ? <button className="text-button back-tracks" onClick={() => navigate({ track: null, day: null })}>Explore both tracks</button> : <a className="text-button" href="#journeys">Find your journey <ArrowDown size={14} /></a>}<button className="how-to-button" id="how-to-use" aria-haspopup="dialog" onClick={()=>setGuideOpen(true)}><CircleHelp size={16}/>How to use</button><span className="season-pill"><Star size={12} /> DECEMBER 1–24</span></nav></div></header>
     <div className="container utility-nav"><button className="text-button" onClick={()=>navigate({track:null,day:null,view:'discover'})}><Search size={15}/>Find a task</button><button className="text-button" onClick={()=>navigate({track:null,day:null,view:'toolkit'})}><BriefcaseBusiness size={15}/>Everyday Toolkit</button><button className="text-button" onClick={()=>navigate({track:null,day:null,view:'saved'})}><Bookmark size={15}/>My saved toolkit</button>{resume && <button className="text-button continue-button" onClick={()=>navigate(resume)}>Continue where I stopped<ArrowRight size={15}/></button>}</div>
     <main id="main">
       {route.view ? <Discovery mode={route.view} now={now} review={REVIEW} progress={progress} navigate={navigate} onImport={importProgress} notify={notify}/> : !track ? <>
-        <section className="hero container"><div className="hero-copy"><p className="eyebrow"><span className="gold-line" /> A LITTLE LEARNING. A LASTING DIFFERENCE.</p><h1>24 days.<br />A smarter way<br />to <em>work.</em><Sparkles className="heading-spark" size={31} /></h1><p className="hero-description">Unwrap a new possibility with AI. Practical ideas, useful tools, and small wins for the way we work at Randstad GBS.</p><a className="button primary hero-cta" href="#journeys">Find your journey <ArrowDown size={17} /></a><div className="hero-footnote"><span className="mini-stars">✦ ✦ ✦</span> Two tracks. 48 discoveries. Your pace.</div></div><GiftScene /></section>
+        <section className="hero container"><div className="hero-copy"><p className="eyebrow"><span className="gold-line" /> {TAGLINE}</p><h1>24 days.<br />A smarter way<br />to <em>work.</em><Sparkles className="heading-spark" size={31} /></h1><p className="hero-description">{COLLECTION_DESCRIPTION} Explore an idea, practise with an example, or adapt it to a task you need to finish.</p><a className="button primary hero-cta" href="#journeys">Find your journey <ArrowDown size={17} /></a><div className="hero-footnote"><span className="mini-stars">✦ ✦ ✦</span> Two tracks. 48 discoveries. Your pace.</div></div><GiftScene /></section>
         <div className="container feature-strip-wrap"><div className="feature-strip"><span><Gift size={17} /> A new discovery every day</span><span><Clock3 size={17} /> Small, practical activities</span><span><BriefcaseBusiness size={17} /> Made for your working day</span><span><Bookmark size={17} /> Ideas worth keeping</span></div></div>
         <section className="container everyday-launch"><p className="eyebrow">A USEFUL START, ANY DAY</p><h2>What would help you today?</h2><p>Open one of eight reusable work templates now, or follow the December calendars below.</p><TaskShortcuts onChoose={task=>navigate({track:null,day:null,view:'toolkit',task})}/></section>
         <section id="journeys" className="container journeys"><div className="section-heading"><div><p className="eyebrow">ONE CALENDAR. TWO WAYS TO GROW.</p><h2>Choose your journey.</h2></div><p>Start with what you need today.<br />You can switch tracks whenever you like.</p></div><div className="track-cards">{tracks.map(t => <article key={t.id} className={`track-card ${t.color}`}><div className="track-card-top"><span className="track-icon">{t.id === 'guided' ? <BookOpen size={24} /> : <BriefcaseBusiness size={24} />}</span><span className="track-badge">{t.id === 'guided' ? 'GREAT PLACE TO START' : 'EXPLORE BY YOUR ROLE'}</span></div><p className="eyebrow">{t.eyebrow}</p><h3>{t.name}</h3><p>{t.description}</p><div className="track-details"><span>24 activities</span><span>10–25 min each</span><span>{t.id === 'guided' ? 'Four learning chapters' : 'Across business teams'}</span></div><button className="track-enter" onClick={() => navigate({ track: t.id, day: null })}>Explore {t.id === 'guided' ? 'the learning journey' : 'business activities'}<ArrowRight size={19} /></button></article>)}</div><p className="journey-note"><CheckCircle2 size={15} /> No sign-in. Fictional practice examples included. Your progress stays in this browser.</p></section>
@@ -174,8 +184,9 @@ export default function App() {
       </>}
       {storageWarning && <div className="container storage-warning" role="status">Some progress could not be read or saved. You can keep learning in this session; browser storage may be disabled or full.</div>}
     </main>
-    <footer className="site-footer container"><div><span className="footer-brand">A little smarter. Together.</span><p>24 Days of Smarter Work · Randstad GBS · 2026</p></div><div><span>Made for the way we work.</span><p>Use your approved Google tools. Practice examples are fictional.</p></div></footer>
-    {activity && <Lesson activity={activity} progress={progress[activity.id] || emptyProgress()} unlocked={isUnlocked(activity.day, now, REVIEW)} workOnly={workOnly} onClose={() => navigate(workOnly ? {track:null,day:null,view:'toolkit'} : { track: activity.track, day: null }, true)} onMove={day => navigate({ track: activity.track, day }, true)} onRelated={()=>navigate({track:activity.related.track,day:activity.related.day})} onToggle={field => updateProgress(activity, { [field]: !progress[activity.id]?.[field] }, workOnly)} notify={notify} />}
+    <footer className="site-footer container"><div><span className="footer-brand">{TAGLINE}</span><p>{SITE_NAME} · 2026</p></div><div><span>Shared ideas. Everyday possibilities.</span><p>Use your approved Google tools. Practice examples are fictional.</p></div></footer>
+    {activity && !guideOpen && <Lesson activity={activity} progress={progress[activity.id] || emptyProgress()} unlocked={isUnlocked(activity.day, now, REVIEW)} workOnly={workOnly} onClose={() => navigate(workOnly ? {track:null,day:null,view:'toolkit'} : { track: activity.track, day: null }, true)} onMove={day => navigate({ track: activity.track, day }, true)} onRelated={()=>navigate({track:activity.related.track,day:activity.related.day})} onToggle={field => updateProgress(activity, { [field]: !progress[activity.id]?.[field] }, workOnly)} notify={notify} />}
+    {guideOpen && <WelcomeGuide review={REVIEW} onClose={closeGuide}/>}
     <div className={`toast ${toast ? 'show' : ''}`} role="status" aria-live="polite">{toast && <><CheckCircle2 size={18} /><span>{toast}</span>{doorToast && <button className="text-button" onClick={()=>{navigate(doorToast);setToast('');}}>Open day {doorToast.day}<ArrowRight size={14}/></button>}<button className="icon-button" aria-label="Dismiss notification" onClick={() => setToast('')}><X size={15} /></button></>}</div>
   </>;
 }

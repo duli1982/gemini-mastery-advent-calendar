@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import AxeBuilder from '@axe-core/playwright';
 import { mkdirSync } from 'node:fs';
 
@@ -69,6 +69,7 @@ test('blocked storage keeps reminders and dismissal usable',async({page})=>{
   await page.clock.install({time:new Date('2026-12-08T08:00:00Z')});
   await page.addInitScript(()=>Object.defineProperty(window,'localStorage',{get(){throw Error('blocked');}}));
   await page.goto(`${production}/?track=business`);
+  await page.getByRole('button',{name:'Start exploring'}).click();
   await page.getByRole('button',{name:'Dismiss calendar reminders for today'}).click();
   await expect(page.getByRole('region',{name:'Calendar reminders'})).toHaveCount(0);
   await expect(page.getByRole('status').filter({hasText:'Your reminder preference could not be saved'})).toBeVisible();
