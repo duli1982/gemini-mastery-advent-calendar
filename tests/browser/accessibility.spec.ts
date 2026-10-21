@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import AxeBuilder from '@axe-core/playwright';
 
 for (const [name, path] of [['landing', '/'], ['calendar', '/?track=guided'], ['lesson', '/?track=business&day=5'], ['discovery','/?view=discover'], ['toolkit','/?view=toolkit&task=email'], ['saved','/?view=saved']] as const) {

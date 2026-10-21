@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import { mkdirSync } from 'node:fs';
 
 test('landing page, both tracks, filters, separate saved and tried progress', async ({ page }) => {
@@ -82,6 +82,7 @@ test('both PDF workbook downloads use the selected track', async ({ page }) => {
 test('storage failure keeps activities usable and gives feedback', async ({ page }) => {
   await page.addInitScript(() => { Object.defineProperty(window, 'localStorage', { get() { throw new Error('blocked'); } }); });
   await page.goto('/?track=guided&day=1');
+  await page.getByRole('button',{name:'Start exploring'}).click();
   await page.getByRole('button', { name: 'Mark as tried', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Tried it', exact: true })).toBeVisible();
   await page.keyboard.press('Escape');

@@ -5,6 +5,7 @@ import './styles.css';
 import './enterprise.css';
 import './work.css';
 import './calendar.css';
+import './welcome.css';
 
 class ErrorBoundary extends Component<{ children: ReactNode }, { error: boolean }> {
   state = { error: false };
