@@ -2,6 +2,7 @@ node_modules/
 dist/
 dist-team-review/
 .vercel/
+.wrangler/
 test-results/
 playwright-report/
 tmp/

@@ -2,6 +2,8 @@
 
 The team review opens all 24 doors in both tracks and both complete workbooks before December. A persistent **TEAM REVIEW** banner identifies this version. The normal public build keeps the December 2026 dates.
 
+Cloudflare's separate all-open Worker is documented in [CLOUDFLARE.md](CLOUDFLARE.md). Its address is https://smarter-work-2026-team-review.smarter-work-2026.workers.dev/. The Vercel instructions below remain valid for the existing Vercel review deployment; disabling or deleting one provider's deployment does not remove the other.
+
 ## Share a separate review link
 
 The existing Vercel Git integration builds pushes to `codex/team-review` as an all-open Preview deployment. Use the Preview URL shown on that branch's pull request or in the Vercel project dashboard. No merge into `main` is needed to share this review.

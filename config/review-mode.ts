@@ -24,6 +24,9 @@ export function reviewFlags(command: string, mode: string, settings: ReviewSetti
   const teamReview = command === 'build' && mode === 'team-review';
   if (teamReview) {
     if (!teamReviewEnabled(settings, env)) throw new Error('Team review is disabled. Use npm run build for the date-based site.');
+    if(env.CLOUDFLARE_BUILD_TARGET==='public' || (env.WORKERS_CI==='1' && env.CLOUDFLARE_BUILD_TARGET!=='review')) {
+      throw new Error('All-open Cloudflare builds require the separate review target. The public Worker must keep the December dates.');
+    }
     if (env.VERCEL_ENV === 'production' || (env.VERCEL === '1' && env.VERCEL_ENV !== 'preview')) {
       throw new Error('Team review can only be deployed as a Vercel Preview. Production must use the December dates.');
     }
