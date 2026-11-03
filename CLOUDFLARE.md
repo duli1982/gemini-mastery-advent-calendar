@@ -35,7 +35,9 @@ Each Wrangler configuration runs its own `build.command` before deployment, so i
 
 If a login is needed, run `npx wrangler login`. For a limited OAuth authorisation that can publish these static Workers, include `account:read`, `user:read`, `workers:write`, `workers_scripts:write` and `workers_routes:write`. Authorisation is completed by the account owner in Cloudflare's browser page.
 
-## Connect automatic GitHub updates
+## Automatic GitHub updates
+
+Both Workers were connected to GitHub on 3 November 2026 with the settings below. Pushes to `main` publish the public calendar; pushes to `codex/team-review` publish the all-open review. Cloudflare manages the build credential; it is not stored in the repository. The following instructions describe how to reconnect or reproduce the setup.
 
 In Cloudflare, open each Worker, then **Settings > Builds > Connect**. Select GitHub, authorise the Cloudflare GitHub App for the intended repository if prompted, and use:
 
