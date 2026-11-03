@@ -20,7 +20,7 @@ npm run build
 npm run preview
 ```
 
-The production preview is http://127.0.0.1:3007. Deploy the `dist` folder to static hosting when ready. The connected Vercel project builds Git pushes using `npm run build:hosting`: production and ordinary branches use dates; the dedicated team-review Preview branch opens all doors. See [TEAM_REVIEW.md](TEAM_REVIEW.md) for sharing, access settings and removal.
+The production preview is http://127.0.0.1:3007. Cloudflare has separate public and team-review Worker configurations, both using this repository. See [CLOUDFLARE.md](CLOUDFLARE.md) for live addresses, deployment commands, GitHub branch settings and review retirement. The existing Vercel integration remains supported by `npm run build:hosting`: production and ordinary branches use dates; the dedicated team-review Preview branch opens all doors. See [TEAM_REVIEW.md](TEAM_REVIEW.md) for Vercel review settings.
 
 ## Calendar and learner behavior
 

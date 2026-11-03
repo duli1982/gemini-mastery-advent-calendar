@@ -1,0 +1,12 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "smarter-work-2026-team-review",
+  "compatibility_date": "2026-11-03",
+  "workers_dev": true,
+  "preview_urls": false,
+  "build": { "command": "npm run build:cloudflare:review" },
+  "assets": {
+    "directory": "./dist-team-review",
+    "not_found_handling": "single-page-application"
+  }
+}

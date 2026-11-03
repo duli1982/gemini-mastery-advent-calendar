@@ -11,9 +11,15 @@
     "build:team-review": "tsc --noEmit && vite build --mode team-review",
     "preview": "vite preview --host 127.0.0.1 --port 3007",
     "preview:team-review": "vite preview --outDir dist-team-review --host 127.0.0.1 --port 3008",
-    "test": "tsx --test tests/core.test.ts tests/review-build.test.ts tests/reminders.test.ts tests/welcome.test.ts",
+    "test": "tsx --test tests/core.test.ts tests/review-build.test.ts tests/reminders.test.ts tests/welcome.test.ts tests/cloudflare.test.ts",
     "test:browser": "playwright test",
-    "workbooks": "tsx scripts/workbooks.ts"
+    "workbooks": "tsx scripts/workbooks.ts",
+    "build:cloudflare:public": "tsx scripts/build-cloudflare.ts public",
+    "build:cloudflare:review": "tsx scripts/build-cloudflare.ts review",
+    "deploy:cloudflare:public": "wrangler deploy --config wrangler.public.jsonc",
+    "deploy:cloudflare:review": "wrangler deploy --config wrangler.review.jsonc",
+    "check:cloudflare:public": "wrangler deploy --config wrangler.public.jsonc --dry-run",
+    "check:cloudflare:review": "wrangler deploy --config wrangler.review.jsonc --dry-run"
   },
   "dependencies": {
     "jspdf": "^4.2.0",
@@ -30,6 +36,7 @@
     "@vitejs/plugin-react": "^5.0.0",
     "tsx": "^4.20.0",
     "typescript": "~5.8.2",
-    "vite": "^6.2.0"
+    "vite": "^6.2.0",
+    "wrangler": "4.157.0"
   }
 }
